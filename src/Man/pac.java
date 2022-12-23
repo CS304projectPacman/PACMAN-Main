@@ -31,7 +31,7 @@ public class pac extends AnimListener {
     int maxWidth = 100;
     int maxHeight = 100;
     int b = maxWidth/2, w = maxHeight/2;
-    int x = maxWidth/2, y = maxHeight/2;
+    int x =maxWidth-110/2, y = maxHeight-160/2;
     String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","titleScreen.jpg","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
