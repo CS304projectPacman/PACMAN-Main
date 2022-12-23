@@ -8,35 +8,31 @@ package Man;
 //package project;
 
 import Texture.TextureReader;
+
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import javax.media.opengl.*;
 
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
-import Man.maze;
 
 public class pac extends AnimListener {
-    public int maze_tex;
-    public int pill_tex;
-    public int bigPill_tex;
-    public int gameTick;
-    public int fruitSpawned;
-    public int fruitCounter;
-    enum tile {W, G, P, u, o, e, O, E, F} ;
 
-    enum Directions {
-        up,down,left,right,up_left,up_right,down_left,down_right
-    }
+  boolean balls [][];
+  boolean states [][];
 
-    // int direction =0;
+
+
+
     AnimGLEventListener3.Directions direction = AnimGLEventListener3.Directions.up;
 
     int animationIndex = 0;
     int maxWidth = 100;
     int maxHeight = 100;
+    int b = maxWidth/2, w = maxHeight/2;
     int x = maxWidth/2, y = maxHeight/2;
-    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","maze.png","A_black_image.jpg"};
+    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","titleScreen.jpg","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -72,38 +68,64 @@ public class pac extends AnimListener {
                 e.printStackTrace();
             }
         }
+
     }
+
 int r=50;
+
     public void display(GLAutoDrawable gld) {
-
         GL gl = gld.getGL();
-//
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT);       //Clear The Screen And The Depth Buffer
+
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        //Clear The Screen And The Depth Buffer
+//        drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
         gl.glLoadIdentity();
+// a3ml el title Screen
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
 
 
-        DrawBackground(gl);
-        handleKeyPress();
         animationIndex = animationIndex % 4;
 //        DrawGraph(gl);
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
+        DrawBackground(gl);
+        handleKeyPress();
+
+
+
 
     }
+
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
     }
+    void drowOcircle(GL gl, float r, Color c,double sides, double startAngle , int step){
+        gl.glColor3fv(c.getColorComponents(null),0);
+        gl.glColor3f(0,1,1);
+        gl.glBegin(GL.GL_LINE_LOOP);
+        for(int i=0 ;i<360;i+=1)
+            gl.glVertex2i((int) (r*Math.cos(Math.toRadians(i))), (int) (r*Math.sin(Math.toRadians(i))));
+
+        gl.glEnd();
+        gl.glDisable(GL.GL_BLEND);
+    }
+
+
 
     //    public void DrawSprite(GL gl,int x, int y, int index, float scale , int dir){
+
     public void DrawSprite(GL gl,int x, int y, int index, float scale , AnimGLEventListener3.Directions dir){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+        double w = (x/(maxWidth/2.0) - 0.9);
+        double z=(y/(maxHeight/2.0) - 0.9);
 
         gl.glPushMatrix();
-        gl.glTranslated( x/(maxWidth/2.0) - 0.9, y/(maxHeight/2.0) - 0.9, 0);
+        gl.glTranslated( w, z, 0);
         gl.glScaled(0.1*scale, 0.1*scale, 1);
+
 ///////////////////////////////
         int angle=0;
         switch (dir){
@@ -132,20 +154,23 @@ int r=50;
         gl.glTexCoord2f(0.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glEnd();
-        gl.glPopMatrix();
+         gl.glPopMatrix();
+
 
         gl.glDisable(GL.GL_BLEND);
     }
 
     public void DrawBackground(GL gl){
         gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);	// Turn Blending On
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
 
-        gl.glPushMatrix();
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-1]);	// Turn Blending On
+//        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
+
+//        gl.glPushMatrix();
 
         gl.glBegin(GL.GL_QUADS);
         // Front Face
+//        new SimpleJoglApp();
         gl.glTexCoord2f(0.0f, 0.0f);
         gl.glVertex3f(-1.0f, -1.0f, -1.0f);
         gl.glTexCoord2f(1.0f, 0.0f);
@@ -154,8 +179,10 @@ int r=50;
         gl.glVertex3f(1.0f, 1.0f, -1.0f);
         gl.glTexCoord2f(0.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+//        new SimpleJoglApp();
+
         gl.glEnd();
-        gl.glPopMatrix();
+//        gl.glPopMatrix();
 
         gl.glDisable(GL.GL_BLEND);
 
@@ -167,6 +194,10 @@ int r=50;
 
     public void handleKeyPress() {
 
+                if(x==50  && y==50){
+                    x=45;
+                    y=19;
+                }
 /*
         1 = Rigth , 2=Down  , 3 =left , 0= up
 
@@ -189,7 +220,8 @@ int r=50;
             }
             direction= AnimGLEventListener3.Directions.down_right;
             animationIndex++;
-        }else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_UP)) {
+        }
+        else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_UP)) {
             if (x < maxWidth-10) {
                 x++;
             }
@@ -209,18 +241,24 @@ int r=50;
             direction= AnimGLEventListener3.Directions.up_left;
             animationIndex++;
         }
-        else
-        if (isKeyPressed(KeyEvent.VK_LEFT)) {
-            if (x > 0) {
+        else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+            if (x > -10) {
                 x--;
             }
 
+            else if (x == -10) {
+                x=90;
+            }
             direction= AnimGLEventListener3.Directions.left;
             animationIndex++;
+
         }else
         if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            if (x < maxWidth-10) {
+            if (x < maxWidth+10) {
                 x++;
+            }
+             else if (x == maxWidth+10) {
+                x=0;
             }
             direction= AnimGLEventListener3.Directions.right;
             animationIndex++;
@@ -239,6 +277,516 @@ int r=50;
             direction= AnimGLEventListener3.Directions.up;
             animationIndex++;
         }
+        System.out.println(x+"A"+y);
+        //elbab
+//        if (x >= 31&& x<=59 && y==57 ) {
+//
+//            y++;
+//        }
+        if (x >= 31&& x<=43 && y==57 ) {
+
+            y++;
+        }
+        if (x >= 48&& x<=59 && y==57 ) {
+
+            y++;
+        }
+        if (x >= 31&& x<=43 && y==52 ) {
+
+            y--;
+        }
+        if (x >= 48&& x<=59 && y==52 ) {
+
+            y--;
+        }
+        //////////////////////
+        if (y >= 40&& y<=56 && x==36) {
+            x++;
+        }
+        /////
+        if (y >= 40&& y<=56&& x==31) {
+            x--;
+        }
+        //////////////////////////////////
+        if (y >= 40&& y<=56 && x==59) {
+            x++;
+        }
+        /////
+        if (y >= 40&& y<=56&& x==55) {
+            x--;
+        }
+        //taht el bab 2
+        ////////////////////////////////////////////////
+        if (x >= 31&& x<=59 && y==37  ) {
+            y++;
+        }
+
+        if (x >= 31&& x<=59 && y==30  ) {
+            y--;
+        }
+        //el2fla
+        /////////////////////////////////////////////////////
+        if (x >= 31&& x<=59 && y==46  ) {
+            y++;
+        }
+        if (x >= 31&& x<=59 && y==40  ) {
+            y--;
+        }
+        ///////////////////////////////////////////////////////
+        if (x >= 31&& x<=59 && y==18  ) {
+            y++;
+        }
+        if (x >= 31&& x<=59 && y==11  ) {
+            y--;
+        }
+        ////////////////////////////////////////////////
+        //el etnin elly taht
+        if (x >= 3&& x<=37 && y==1 ) {
+            y--;
+        }
+        if (x >= 52&& x<=88 && y==1 ) {
+            y--;
+        }
+        if (x >= 52&& x<=88 && y==8 ) {
+            y++;
+        }
+        if (x >= 3&& x<=37 && y==8 ) {
+            y++;
+        }
+        /////////////////////elly fo2///////////////////////////
+        if (x >= 31&& x<=59 && y==76 ) {
+            y++;
+        }
+        if (x >= 31&& x<=59 && y==69 ) {
+            y--;
+        }
+        //////////////////////////////////
+        if (x >= 3&& x<=17 && y==89 ) {
+            y++;
+        }
+        if (x >= 3&& x<=17 && y==79 ) {
+            y--;
+        }
+        /////////////////////////////////////////////
+        if (x >= 21&& x<=38 && y==89 ) {
+            y++;
+        }
+        if (x >= 21&& x<=38 && y==79 ) {
+            y--;
+        }
+        //////////////////////////////////////
+
+        if (x >= 52&& x<=70 && y==89 ) {
+            y++;
+        }
+        if (x >= 52&& x<=70 && y==79 ) {
+            y--;
+        }
+        ///////////////////////////////////////////////
+        if (x >= 74&& x<=88 && y==89 ) {
+            y++;
+        }
+        if (x >= 74&& x<=88 && y==79 ) {
+            y--;
+        }
+        /////////////////////////////////////////////////////
+        if (x >= 74&& x<=88 && y==76 ) {
+            y++;
+        }
+        if (x >= 74&& x<=88 && y==69 ) {
+            y--;
+        }
+        ////////////////////////////////////////
+        if (x >= 3&& x<=16 && y==76 ) {
+            y++;
+        }
+        if (x >= 3&& x<=16 && y==69 ) {
+            y--;
+        }///////////////////////////////////////////
+        if (x >= 74&& x<=90 && y==66) {
+            y++;
+        }
+        if (x >= 74&& x<=90 && y==50 ) {
+            y--;
+        }//////////////////////////////////////
+        if (x >= 0&& x<=16 && y==66) {
+            y++;
+        }
+        if (x >= 0&& x<=16 && y==50 ) {
+            y--;
+        }
+        //////////////////////////////////////////
+        if (x >= 0&& x<=16 && y==46) {
+            y++;
+        }
+        if (x >= 0&& x<=16 && y==31 ) {
+            y--;
+        }
+        /////////////////////////////////////////////////
+        if (x >= 74&& x<=90 && y==46) {
+            y++;
+        }
+        if (x >= 74&& x<=90 && y==31 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 74&& x<=88 && y==27) {
+            y++;
+        }
+        if (x >= 74&& x<=88  && y==21 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 3&& x<=16 && y==27) {
+            y++;
+        }
+        if (x >= 3&& x<=16  && y==21 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 20&& x<=38 && y==27) {
+            y++;
+        }
+        if (x >= 20&& x<=38  && y==21 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 52&& x<=70 && y==27) {
+            y++;
+        }
+        if (x >= 52&& x<=70  && y==21 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 0&& x<=6 && y==18) {
+            y++;
+        }
+        if (x >= 0&& x<=6  && y==11 ) {
+            y--;
+        }
+        ////////////////////////////////////////////////////
+        if (x >= 84&& x<=90 && y==18) {
+            y++;
+        }
+        if (x >= 84&& x<=90  && y==11 ) {
+            y--;
+        }
+        ///////////////////////////////////Y////////////////////////////////////////
+        if (y >= 50&& y<=65 && x==74) {
+            x--;
+        }
+        //////////////////////////////////////
+        if (y >= 31&& y<=46 && x==74) {
+            x--;
+        }
+        ///////////////////////////////////Y////////////////////////////////////////
+        if (y >= 50&& y<=65 && x==17) {
+            x++;
+        }
+        //////////////////////////////////////
+        if (y >= 31&& y<=46 && x==17) {
+            x++;
+        }
+        //////////////////////////////////////////////////
+        if (y >= 50&& y<=75 && x==27) {
+            x++;
+        }
+        //////////////////////////////////////
+        if (y >= 50&& y<=75 && x==20) {
+            x--;
+        }
+        //////////////////////////////////////////////////
+        if (y >= 50&& y<=75 && x==70) {
+            x++;
+        }
+        //////////////////////////////////////
+        if (y >= 50&& y<=75 && x==63) {
+            x--;
+        }
+
+        ///////////////////
+        if (y >= 60&& y<=72 && x==48) {
+            x++;
+        }
+        //////////////////////////////////////
+        if (y >= 60&& y<=72 && x==42) {
+            x--;
+        }
+
+        ///////////////////
+        if (y >= 79&& y<=90 && x==48) {
+            x++;
+        }
+        //////////////////////////////////////
+        if (y >= 79&& y<=90 && x==42) {
+            x--;
+        }
+        //////////////////////////////////////
+        if (y >= 31&& y<=46 && x==70) {
+            x++;
+        }
+        //
+        if (y >= 31&& y<=46 && x==63) {
+            x--;
+        }
+        //////////////////////////////////////
+        if (y >= 31&& y<=46 && x==27) {
+            x++;
+        }
+        /////
+        if (y >= 31&& y<=46 && x==20) {
+            x--;
+        }
+        /////////////////////////////////////
+        if (y >= 21&& y<=34 && x==49) {
+            x++;
+        }
+        /////
+        if (y >= 21&& y<=34 && x==42) {
+            x--;
+        }
+
+        /////////////////////////////////////
+        if (y >= 11&& y<=26 && x==16) {
+            x++;
+        }
+        /////
+        if (y >= 11&& y<=26 && x==9) {
+            x--;
+        }
+        /////////////////////////////
+        if (y >= 11&& y<=26 && x==81) {
+            x++;
+        }
+        /////
+        if (y >= 11&& y<=26 && x==74) {
+            x--;
+        }
+        /////////////////////////////
+        if (y >= 5&& y<=17 && x==27) {
+            x++;
+        }
+        /////
+        if (y >= 5&& y<=17&& x==20) {
+            x--;
+        }
+        /////////////////////////////
+        if (y >= 2&& y<=17 && x==49) {
+            x++;
+        }
+        /////
+        if (y >= 2&& y<=17&& x==42) {
+            x--;
+        }
+        /////////////////////////////
+        if (y >= 5&& y<=17 && x==70) {
+            x++;
+        }
+        /////
+        if (y >= 5&& y<=17&& x==63) {
+            x--;
+        }
+        /////////////////////////////////////////////////
+        if (x >= 25&& x<=38 && y==66) {
+            y++;
+        }
+        if (x >= 25&& x<=38  && y==59 ) {
+            y--;
+        }
+        /////////////////////
+        if (x >= 52&& x<=67 && y==66) {
+            y++;
+        }
+        if (x >= 52&& x<=67 && y==59 ) {
+            y--;
+        }
+        ////////////////////smalls one
+        if (y >= 80&& y<=88 && x==88) {
+            x++;
+        }
+        if (y >= 80&& y<=88 && x==74) {
+            x--;
+        }
+        if (y >= 80&& y<=88 && x==70) {
+            x++;
+        }
+        if (y >= 80&& y<=88 && x==52) {
+            x--;
+        }
+
+        if (y >= 80&& y<=88 && x==38) {
+            x++;
+        }
+        if (y >= 80&& y<=88 && x==20) {
+            x--;
+        }
+        if (y >= 80&& y<=88 && x==16) {
+            x++;
+        }
+        if (y >= 80&& y<=88 && x==2) {
+            x--;
+        }
+//
+        if (y >= 70&& y<=75 && x==16) {
+            x++;
+        }
+        if (y >= 70&& y<=75 && x==2) {
+            x--;
+        }
+        //
+        if (y >= 70&& y<=75 && x==88) {
+            x++;
+        }
+        if (y >= 70&& y<=75 && x==74) {
+            x--;
+        }
+        //
+        if (y >= 70&& y<=75 && x==59) {
+            x++;
+        }
+        if (y >= 70&& y<=75 && x==31) {
+            x--;
+        }
+        ///
+        if (y >= 60&& y<=66 && x==38) {
+            x++;
+        }
+        if (y >= 60&& y<=66&& x==52) {
+            x--;
+        }
+        ///
+        if (y >= 31&& y<=37 && x==59) {
+            x++;
+        }
+        if (y >= 31&& y<=37 && x==31) {
+            x--;
+        }
+        ////
+        if (y >= 21&& y<=27 && x==38) {
+            x++;
+        }
+        if (y >= 21&& y<=27  && x==20) {
+            x--;
+        }
+////
+        if (y >= 21&& y<=27  && x==2) {
+            x--;
+        }
+        if (y >= 21&& y<=27  && x==88) {
+            x++;
+        }
+        ////
+        if (y >= 21&& y<=27 && x==70) {
+            x++;
+        }
+        if (y >= 21&& y<=27  && x==52) {
+            x--;
+        }
+        ///
+        if (y >= 11&& y<=18  && x==85) {
+            x--;
+        }
+        if (y >= 11&& y<=18&& x==5) {
+            x++;
+        }
+        /////
+        if (y >= 11&& y<=18 && x==59) {
+            x++;
+        }
+        if (y >= 11&& y<=18  && x==31) {
+            x--;
+        }
+        ///
+        if (y >= 2&& y<=8 && x==38) {
+            x++;
+        }
+        if (y >= 2&& y<=8  && x==3) {
+            x--;
+        }
+        ///
+        if (y >= 2&& y<=8 && x==87) {
+            x++;
+        }
+        if (y >= 2&& y<=8  && x==52) {
+            x--;
+        }
+        //////////
+        if (y >= 53&& y<=57 && x==42) {
+            x++;
+        }
+        if (y >= 53&& y<=57  && x==48) {
+            x--;
+        }
+
+        //////////
+        if (x >= 21&& x<=27 && y==75) {
+            y++;
+        }
+        if (x >= 21&& x<=27 && y==51) {
+            y--;
+        }
+
+        //
+        if (x >= 21&& x<=27 && y==47) {
+            y++;
+        }
+        if (x >= 21&& x<=27 && y==30) {
+            y--;
+        }
+        ////
+        if (x >= 21&& x<=27 && y==17) {
+            y++;
+        }
+        ////
+        if (x >= 41&& x<=50 && y==2) {
+            y--;
+        }
+
+        if (x >= 41&& x<=50 && y==21) {
+            y--;
+        }
+        if (x >= 41&& x<=50 && y==60) {
+            y--;
+        }
+        if (x >= 41&& x<=50 && y==80) {
+            y--;
+        }
+        if (x >= 63&& x<=70 && y==75) {
+            y++;
+        }
+        if (x >= 63&& x<=70 && y==50) {
+            y--;
+        }
+        ////
+        if (x >= 63&& x<=70 && y==47) {
+            y++;
+        }
+        if (x >= 63&& x<=70 && y==31) {
+            y--;
+        }
+        if (x >= 63&& x<=70 && y==18) {
+            y++;
+        }
+        if (x >= 74&& x<=81 && y==11) {
+            y--;
+        }
+
+        if (y >= 60&& y<=90 && x==0) {
+            x++;
+        }
+        if (y >= 0&& y<=40 && x==0) {
+            x++;
+        }
+
+        if (y >= 60&& y<=90 && x==90) {
+            x--;
+        }
+        if (y >= 0&& y<=40 && x==90) {
+            x--;
+        }
+
+
+
     }
 
     public BitSet keyBits = new BitSet(256);
