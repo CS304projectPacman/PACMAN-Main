@@ -14,13 +14,14 @@ import java.awt.event.*;
 import java.io.IOException;
 import javax.media.opengl.*;
 
+import java.sql.SQLOutput;
 import java.util.BitSet;
 import javax.media.opengl.glu.GLU;
 
 public class pac extends AnimListener {
 
-  boolean balls [][];
-  boolean states [][];
+    boolean balls [][];
+    boolean states [][];
 
 
 
@@ -30,9 +31,9 @@ public class pac extends AnimListener {
     int animationIndex = 0;
     int maxWidth = 100;
     int maxHeight = 100;
-    int b = maxWidth/2, w = maxHeight/2;
+    int n = maxWidth/2, m = maxHeight/2;
     int x =maxWidth-110/2, y = maxHeight-160/2;
-    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","titleScreen.jpg","maze.png"};
+    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","titleScreen.jpg","point.png","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -71,14 +72,14 @@ public class pac extends AnimListener {
 
     }
 
-int r=50;
+    int r=50;
 
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
 
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         //Clear The Screen And The Depth Buffer
-//        drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
+
         gl.glLoadIdentity();
 // a3ml el title Screen
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
@@ -86,14 +87,87 @@ int r=50;
 
         animationIndex = animationIndex % 4;
 //        DrawGraph(gl);
-        DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
+        drawPoints(gl);
         DrawBackground(gl);
+        points(gl);
+        DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
+
+
         handleKeyPress();
 
 
+        gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 
+        //drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
+
+        }
+        public void points(GL gl){
+            for (double i = -0.9; i < 0.92; i+=0.2) {
+
+                for (double j = -0.90; j <0.92 ; j+=0.2) {
+                    DrawFood(gl, i, j, 0.02f);
+                    isvisibal(i,j);
+                    System.out.println(i+"aaaaaa"+j);
+                }
+
+//                }
+
+
+
+            }
+
+        }
+
+    boolean flag=true;
+    public void isvisibal(double i,double j){
+//        if(x==i/0.1)
+//            System.out.println(i);
+//        {flag=false;}
+
+        if(x==5/i&&y==5/j) {
+            flag = false;
+        }
 
     }
+
+    public void DrawFood (GL gl,double m, double n, float scale ){
+//        if(50==x&&y==50)
+        if(flag == true){
+
+
+            gl.glEnable(GL.GL_BLEND);
+            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[5]);    // Turn Blending On
+
+
+            gl.glPushMatrix();
+            gl.glTranslated(m, n, 0);
+            gl.glScaled(scale, scale, 1);
+
+
+            //System.out.println(x +" " + y);
+            gl.glBegin(GL.GL_QUADS);
+            // Front Face
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(1.0f, -1.0f, -1.0f);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(1.0f, 1.0f, -1.0f);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+            gl.glEnd();
+            gl.glPopMatrix();
+
+
+            gl.glDisable(GL.GL_BLEND);
+
+    }
+
+    }
+
+
+
+
 
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
@@ -154,11 +228,38 @@ int r=50;
         gl.glTexCoord2f(0.0f, 1.0f);
         gl.glVertex3f(-1.0f, 1.0f, -1.0f);
         gl.glEnd();
-         gl.glPopMatrix();
+        gl.glPopMatrix();
 
 
         gl.glDisable(GL.GL_BLEND);
     }
+    public void drawPoints(GL gl) {
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[5]);
+
+
+
+                    gl.glPushMatrix();
+                    gl.glTranslated(0.25, 2, 0);
+                    gl.glScaled(0.25, 0.25, 1);
+                    gl.glBegin(GL.GL_QUADS);
+                    gl.glTexCoord2f(0.0f, 0.0f);
+                    gl.glVertex2d(x, y + 2);
+                    gl.glTexCoord2f(0.0f, 1.0f);
+                    gl.glVertex2d(x, y + 3);
+                    gl.glTexCoord2f(1.0f, 1.0f);
+                    gl.glVertex2d(x + 1, y + 3);
+                    gl.glTexCoord2f(1.0f, 0.0f);
+                    gl.glVertex2d(x + 1, y + 2);
+                    gl.glEnd();
+                    gl.glPopMatrix();
+
+
+
+
+        gl.glDisable(GL.GL_BLEND);
+    }
+
 
     public void DrawBackground(GL gl){
         gl.glEnable(GL.GL_BLEND);
@@ -188,16 +289,17 @@ int r=50;
 
     }
 
+
     /*
      * KeyListener
      */
 
     public void handleKeyPress() {
 
-                if(x==50  && y==50){
-                    x=45;
-                    y=19;
-                }
+//        if(x==50  && y==50){
+//            x=45;
+//            y=19;
+//        }
 /*
         1 = Rigth , 2=Down  , 3 =left , 0= up
 
@@ -257,7 +359,7 @@ int r=50;
             if (x < maxWidth+10) {
                 x++;
             }
-             else if (x == maxWidth+10) {
+            else if (x == maxWidth+10) {
                 x=0;
             }
             direction= AnimGLEventListener3.Directions.right;
@@ -286,6 +388,7 @@ int r=50;
         if (x >= 31&& x<=43 && y==57 ) {
 
             y++;
+
         }
         if (x >= 48&& x<=59 && y==57 ) {
 
@@ -310,6 +413,8 @@ int r=50;
         //////////////////////////////////
         if (y >= 40&& y<=56 && x==59) {
             x++;
+
+
         }
         /////
         if (y >= 40&& y<=56&& x==55) {
@@ -750,6 +855,7 @@ int r=50;
         }
         if (x >= 41&& x<=50 && y==80) {
             y--;
+
         }
         if (x >= 63&& x<=70 && y==75) {
             y++;
@@ -780,10 +886,12 @@ int r=50;
 
         if (y >= 60&& y<=90 && x==90) {
             x--;
+
         }
         if (y >= 0&& y<=40 && x==90) {
             x--;
         }
+
 
 
 
