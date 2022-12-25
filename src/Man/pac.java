@@ -118,35 +118,105 @@ HashSet<Pair> foodmap=new HashSet<>();
         creatEeat=false;
 
             loops();
-            upleft();
+            dots();
 
 
                 }
     public void loops(){
 
-for (int i = 1;i < 90;i+=7) {
+for (int i = 1;i < 90;i+=4) {
     foodmap.add(new Pair(i, 0));
 }
         for (int i = 10 ; i <= 90;i+=7) {
             foodmap.add(new Pair(72, i));
         }
-
+        for (int i = 10;i <= 90;i+=7) {
+            foodmap.add(new Pair(18, i));
+        }
+//
+        for (int i = 22;i < 42;i+=6) {
+            foodmap.add(new Pair(i, 28));
+        }
+        for (int i = 50;i < 68;i+=6) {
+            foodmap.add(new Pair(i, 28));
+        }
+        for (int i = 67;i < 89;i+=5) {
+            foodmap.add(new Pair(89, i));
+        }
+        for (int i = 67;i < 89;i+=5) {
+            foodmap.add(new Pair(1, i));
+        }
+        for (int i = 1;i < 42;i+=5) {
+            foodmap.add(new Pair(i, 90));
+        }
+        for (int i = 49;i < 89;i+=5) {
+            foodmap.add(new Pair(i, 90));
+        }
+        for (int i = 6 ; i < 84;i+=6) {
+            foodmap.add(new Pair(i, 77));
+        }
     }
-    public void upleft(){
-        foodmap.add(new Pair(1,4));
-        foodmap.add(new Pair(1,9));
+    public void dots(){
 
+        foodmap.add(new Pair(40,24));
+
+        foodmap.add(new Pair(50,24));
+        foodmap.add(new Pair(89,0));
+        foodmap.add(new Pair(89,4));
+        foodmap.add(new Pair(89,9));
+        foodmap.add(new Pair(23,20));
+        foodmap.add(new Pair(29,20));
+        foodmap.add(new Pair(35,20));
+        foodmap.add(new Pair(40,20));
+        foodmap.add(new Pair(50,20));
+        foodmap.add(new Pair(55,20));
+        foodmap.add(new Pair(61,20));
+        foodmap.add(new Pair(67,20));
+        foodmap.add(new Pair(68,28));
+        foodmap.add(new Pair(29,15));
+        foodmap.add(new Pair(29,10));
+        foodmap.add(new Pair(61,15));
+        foodmap.add(new Pair(61,10));
+        foodmap.add(new Pair(13,10));
+        foodmap.add(new Pair(8,10));
+        foodmap.add(new Pair(8,15));
+        foodmap.add(new Pair(8,20));
+        foodmap.add(new Pair(6,29));
+        foodmap.add(new Pair(12,29));
+        foodmap.add(new Pair(40,4));
+        foodmap.add(new Pair(40,10));
+        foodmap.add(new Pair(35,10));
+        foodmap.add(new Pair(55,10));
+        foodmap.add(new Pair(50,10));
+        foodmap.add(new Pair(50,4));
+        foodmap.add(new Pair(77,10));
+        foodmap.add(new Pair(82,10));
+        foodmap.add(new Pair(82,15));
+        foodmap.add(new Pair(82,20));
+        foodmap.add(new Pair(89,19));
+        foodmap.add(new Pair(89,24));
+        foodmap.add(new Pair(89,29));
+        foodmap.add(new Pair(82,29));
+        foodmap.add(new Pair(77,29));
+        foodmap.add(new Pair(89,90));
+        foodmap.add(new Pair(84,77));
+        foodmap.add(new Pair(51,82));
+        foodmap.add(new Pair(41,82));
+        foodmap.add(new Pair(1,4));
+        foodmap.add(new Pair(1,8));
         foodmap.add(new Pair(1,19));
         foodmap.add(new Pair(1,24));
         foodmap.add(new Pair(1,29));
-
-        foodmap.add(new Pair(1,68));
-        foodmap.add(new Pair(1,73));
-        foodmap.add(new Pair(1,78));
-        foodmap.add(new Pair(1,83));
-        foodmap.add(new Pair(1,88));
-
-
+        foodmap.add(new Pair(10,67));
+        foodmap.add(new Pair(80,67));
+        foodmap.add(new Pair(61,73));
+        foodmap.add(new Pair(61,68));
+        foodmap.add(new Pair(29,73));
+        foodmap.add(new Pair(29,68));
+        foodmap.add(new Pair(50,68));
+        foodmap.add(new Pair(55,68));
+        foodmap.add(new Pair(35,68));
+        foodmap.add(new Pair(40,68));
     }
 
 int counter = 0;
@@ -170,7 +240,7 @@ public void drowf(GL gl) {
     while (itr.hasNext()){
 
         Pair p = (Pair) itr.next();
-        DrawFood(gl, p.getX(), p.getY(), .09f);
+        DrawFood(gl, p.getX(), p.getY(), .1f);
 //
 //        System.out.println(p.getX());
 //       System.out.println(p.getY());
@@ -368,46 +438,46 @@ public void drowf(GL gl) {
         1 = Rigth , 2=Down  , 3 =left , 0= up
 
          */
-        if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
-            if (x > 0) {
-                x--;
-            }
-            if (y > 0) {
-                y--;
-            }
-            direction= AnimGLEventListener3.Directions.down_left;
-            animationIndex++;
-        }else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
-            if (x < maxWidth-10) {
-                x++;
-            }
-            if (y > 0) {
-                y--;
-            }
-            direction= AnimGLEventListener3.Directions.down_right;
-            animationIndex++;
-        }
-        else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_UP)) {
-            if (x < maxWidth-10) {
-                x++;
-            }
-            if (y < maxHeight-10) {
-                y++;
-            }
-            direction= AnimGLEventListener3.Directions.up_right;
-            animationIndex++;
-        }
-        else if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_UP)) {
-            if (x > 0) {
-                x--;
-            }
-            if (y < maxHeight-10) {
-                y++;
-            }
-            direction= AnimGLEventListener3.Directions.up_left;
-            animationIndex++;
-        }
-        else if (isKeyPressed(KeyEvent.VK_LEFT)) {
+//        if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
+//            if (x > 0) {
+//                x--;
+//            }
+//            if (y > 0) {
+//                y--;
+////            }
+//            direction= AnimGLEventListener3.Directions.down_left;
+//            animationIndex++;
+//        }else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
+//            if (x < maxWidth-10) {
+//                x++;
+//            }
+//            if (y > 0) {
+//                y--;
+//            }
+//            direction= AnimGLEventListener3.Directions.down_right;
+//            animationIndex++;
+//        }
+//        else if (isKeyPressed(KeyEvent.VK_RIGHT)&&isKeyPressed(KeyEvent.VK_UP)) {
+//            if (x < maxWidth-10) {
+//                x++;
+//            }
+//            if (y < maxHeight-10) {
+//                y++;
+//            }
+//            direction= AnimGLEventListener3.Directions.up_right;
+//            animationIndex++;
+//        }
+//        else if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_UP)) {
+//            if (x > 0) {
+//                x--;
+//            }
+//            if (y < maxHeight-10) {
+//                y++;
+//            }
+//            direction= AnimGLEventListener3.Directions.up_left;
+//            animationIndex++;
+//        }
+         if (isKeyPressed(KeyEvent.VK_LEFT)) {
             if (x > -10) {
                 x--;
             }
