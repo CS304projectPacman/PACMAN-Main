@@ -15,15 +15,16 @@ import java.io.IOException;
 import javax.media.opengl.*;
 
 import java.sql.SQLOutput;
-import java.util.BitSet;
+import java.util.*;
 import javax.media.opengl.glu.GLU;
 
 public class pac extends AnimListener {
 
     boolean balls [][];
     boolean states [][];
+boolean creatEeat=true;
 
-
+HashSet<Pair> foodmap=new HashSet<>();
 
 
     AnimGLEventListener3.Directions direction = AnimGLEventListener3.Directions.up;
@@ -79,7 +80,6 @@ public class pac extends AnimListener {
 
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         //Clear The Screen And The Depth Buffer
-
         gl.glLoadIdentity();
 // a3ml el title Screen
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
@@ -89,7 +89,9 @@ public class pac extends AnimListener {
 //        DrawGraph(gl);
         drawPoints(gl);
         DrawBackground(gl);
-        points(gl);
+        if (creatEeat) {
+            points(gl);
+        }
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
 
 
@@ -100,39 +102,73 @@ public class pac extends AnimListener {
 
         //drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
 
+        //foodmap.add(new Pair(1,1));
+        //foodmap.remove(new Pair(1,1));
+
+        //foodmap.contains(new Pair(x,y));
+
+        drowf(gl);
+        iseat();
         }
+
         public void points(GL gl){
-            for (double i = -0.9; i < 0.92; i+=0.2) {
+        creatEeat=false;
+             for (int i = 1; i < 100; i+=15) {
 
-                for (double j = -0.90; j <0.92 ; j+=0.2) {
-                    DrawFood(gl, i, j, 0.02f);
-                    isvisibal(i,j);
-                    System.out.println(i+"aaaaaa"+j);
+                for (int j = 0; j <100; j+=7) {
+
+                    foodmap.add(new Pair(i, j));
+
+
                 }
-
-//                }
-
-
-
             }
+        }
+        public void iseat(){
+
+        if (foodmap.contains(new Pair(x,y))){
+
+            foodmap.remove(new Pair(x,y));
 
         }
 
-    boolean flag=true;
-    public void isvisibal(double i,double j){
-//        if(x==i/0.1)
-//            System.out.println(i);
-//        {flag=false;}
 
-        if(x==5/i&&y==5/j) {
-            flag = false;
         }
+
+public void drowf(GL gl) {
+
+
+    Iterator itr = foodmap.iterator();
+
+    while (itr.hasNext()){
+
+        Pair p = (Pair) itr.next();
+        DrawFood(gl, p.getX(), p.getY(), .02f);
+//
+//        System.out.println(p.getX());
+//       System.out.println(p.getY());
 
     }
+}
 
-    public void DrawFood (GL gl,double m, double n, float scale ){
+
+
+   // boolean flag=true;
+//    public void isvisibal(double i,double j){
+////        if(x==i/0.1)
+////            System.out.println(i);
+////        {flag=false;}
+//
+//        if(x==5/i&&y==5/j) {
+//            flag = false;
+//        }
+//
+//    }
+
+    public void DrawFood (GL gl,int x, int y, float scale ){
 //        if(50==x&&y==50)
-        if(flag == true){
+     double m = (x/(maxWidth/2.0) - 0.9);
+      double n=(y/(maxHeight/2.0) - 0.9);
+
 
 
             gl.glEnable(GL.GL_BLEND);
@@ -141,8 +177,8 @@ public class pac extends AnimListener {
 
             gl.glPushMatrix();
             gl.glTranslated(m, n, 0);
-            gl.glScaled(scale, scale, 1);
-
+         //   gl.glScaled(scale, scale, 1);
+            gl.glScaled(0.1*scale, 0.1*scale, 1);
 
             //System.out.println(x +" " + y);
             gl.glBegin(GL.GL_QUADS);
@@ -163,7 +199,7 @@ public class pac extends AnimListener {
 
     }
 
-    }
+
 
 
 
@@ -379,7 +415,7 @@ public class pac extends AnimListener {
             direction= AnimGLEventListener3.Directions.up;
             animationIndex++;
         }
-        System.out.println(x+"A"+y);
+
         //elbab
 //        if (x >= 31&& x<=59 && y==57 ) {
 //
@@ -903,6 +939,7 @@ public class pac extends AnimListener {
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
+        System.out.println(x+"X"+" " +y+" Y");
     }
 
     @Override
