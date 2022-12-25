@@ -33,8 +33,9 @@ HashSet<Pair> foodmap=new HashSet<>();
     int maxWidth = 100;
     int maxHeight = 100;
     int n = maxWidth/2, m = maxHeight/2;
-    int x =maxWidth-110/2, y = maxHeight-160/2;
-    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","titleScreen.jpg","point.png","maze.png"};
+    int x =maxWidth-110/2, y = maxHeight-160/2; // 45 ,20
+
+    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","point.png","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -90,7 +91,9 @@ HashSet<Pair> foodmap=new HashSet<>();
         drawPoints(gl);
         DrawBackground(gl);
         if (creatEeat) {
+
             points(gl);
+
         }
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
 
@@ -103,7 +106,7 @@ HashSet<Pair> foodmap=new HashSet<>();
         //drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
 
         //foodmap.add(new Pair(1,1));
-        //foodmap.remove(new Pair(1,1));
+        //
 
         //foodmap.contains(new Pair(x,y));
 
@@ -113,24 +116,49 @@ HashSet<Pair> foodmap=new HashSet<>();
 
         public void points(GL gl){
         creatEeat=false;
-             for (int i = 1; i < 100; i+=15) {
 
-                for (int j = 0; j <100; j+=7) {
-
-                    foodmap.add(new Pair(i, j));
+            loops();
+            upleft();
 
 
                 }
-            }
+    public void loops(){
+
+for (int i = 1;i < 90;i+=7) {
+    foodmap.add(new Pair(i, 0));
+}
+        for (int i = 10 ; i <= 90;i+=7) {
+            foodmap.add(new Pair(72, i));
         }
+
+    }
+    public void upleft(){
+        foodmap.add(new Pair(1,4));
+        foodmap.add(new Pair(1,9));
+
+        foodmap.add(new Pair(1,19));
+        foodmap.add(new Pair(1,24));
+        foodmap.add(new Pair(1,29));
+
+        foodmap.add(new Pair(1,68));
+        foodmap.add(new Pair(1,73));
+        foodmap.add(new Pair(1,78));
+        foodmap.add(new Pair(1,83));
+        foodmap.add(new Pair(1,88));
+
+
+    }
+
+int counter = 0;
         public void iseat(){
 
         if (foodmap.contains(new Pair(x,y))){
 
             foodmap.remove(new Pair(x,y));
+            counter++;
 
         }
-
+//System.out.println(counter);
 
         }
 
@@ -142,7 +170,7 @@ public void drowf(GL gl) {
     while (itr.hasNext()){
 
         Pair p = (Pair) itr.next();
-        DrawFood(gl, p.getX(), p.getY(), .02f);
+        DrawFood(gl, p.getX(), p.getY(), .09f);
 //
 //        System.out.println(p.getX());
 //       System.out.println(p.getY());
@@ -172,7 +200,7 @@ public void drowf(GL gl) {
 
 
             gl.glEnable(GL.GL_BLEND);
-            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[5]);    // Turn Blending On
+            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[4]);    // Turn Blending On
 
 
             gl.glPushMatrix();
@@ -229,8 +257,8 @@ public void drowf(GL gl) {
     public void DrawSprite(GL gl,int x, int y, int index, float scale , AnimGLEventListener3.Directions dir){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
-        double w = (x/(maxWidth/2.0) - 0.9);
-        double z=(y/(maxHeight/2.0) - 0.9);
+        double w = (x/(maxWidth/2.0) - 0.9); //0
+        double z=(y/(maxHeight/2.0) - 0.9);//-0.5
 
         gl.glPushMatrix();
         gl.glTranslated( w, z, 0);
