@@ -220,16 +220,20 @@ for (int i = 1;i < 90;i+=4) {
     }
 
 int counter = 0;
-        public void iseat(){
+        public void iseat() {
+            for (int i = -3; i < 3; i++) {
+                for (int j = -3; j < 3; j++) {
 
-        if (foodmap.contains(new Pair(x,y))){
+                    if (foodmap.contains(new Pair(x+i,y+j))) {
+                        foodmap.remove(new Pair(x+i, y+j));
+                        counter++;
+break;
+                    }
+                }
 
-            foodmap.remove(new Pair(x,y));
-            counter++;
-
-        }
 //System.out.println(counter);
 
+            }
         }
 
 public void drowf(GL gl) {
