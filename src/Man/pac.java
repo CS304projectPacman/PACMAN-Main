@@ -22,9 +22,9 @@ public class pac extends AnimListener {
 
     boolean balls [][];
     boolean states [][];
-boolean creatEeat=true;
+    boolean creatEeat=true;
 
-HashSet<Pair> foodmap=new HashSet<>();
+    HashSet<Pair> foodmap=new HashSet<>();
 
 
     AnimGLEventListener3.Directions direction = AnimGLEventListener3.Directions.up;
@@ -34,8 +34,8 @@ HashSet<Pair> foodmap=new HashSet<>();
     int index1 = 8;
     int index2= 12;
     int index3 = 16;
-int index4 = 4;
-int index5 = 12;
+    int index4 = 4;
+    int index5 = 12;
     int maxWidth = 100;
     int maxHeight = 100;
     int m = 18, n=90 ;
@@ -46,10 +46,10 @@ int index5 = 12;
     int m5=1,n5=0;
 
     int x =maxWidth/2, y = maxHeight/2; // 45 ,20
-boolean down;
-boolean right;
-boolean up;
-boolean left ;
+    boolean down;
+    boolean right;
+    boolean up;
+    boolean left ;
     String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","redup1.png","reddown1.png","redright1.png","redleft1.png","pinkup1.png","pinkdown1.png","pinkright1.png","pinkleft1.png","greenup1.png","greendown1.png","greenright1.png","greenleft1.png","yellowup1.png","yellowdown1.png","yellowright1.png","yellowleft1.png","point.png","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
@@ -101,6 +101,23 @@ boolean left ;
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
 
 
+        handleKeyPress();
+
+
+        gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+
+
+        drawghost(gl);
+
+        bounds();
+
+        drowf(gl);
+        iseat();
+
+    }
+    int dead =3;
+    public void drawghost(GL gl){
+
         animationIndex = animationIndex % 4;
         index= index % 8 ;
         index1 = index1 %12;
@@ -120,11 +137,16 @@ boolean left ;
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
 
         DrawGhost(gl,m,n,index,0.5f);
+
+
         if (down){
-            if(n>=10){
+
+            if(n>=10 ){
                 n--;
                 index = 5;
+
             }
+
             else
                 down = false;
         }
@@ -160,7 +182,7 @@ boolean left ;
         }
         else if (m2<=90) {
             m2++;
-        index2 = 14;
+            index2 = 14;
         }
         else
             left = true;
@@ -206,34 +228,24 @@ boolean left ;
             m5++;
             index5 = 14;
         }
-        else
-            right = true;
-        handleKeyPress();
+        else{
+            right = true;}
 
+    }
 
-        gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
-
-
-        bounds();
-
-        drowf(gl);
-        iseat();
-
-        }
-
-        public void points(GL gl){
+    public void points(GL gl){
         creatEeat=false;
 
-            loops();
-            dots();
+        loops();
+        dots();
 
 
-                }
+    }
     public void loops(){
 
-for (int i = 1;i < 90;i+=4) {
-    foodmap.add(new Pair(i, 0));
-}
+        for (int i = 1;i < 90;i+=4) {
+            foodmap.add(new Pair(i, 0));
+        }
         for (int i = 10 ; i <= 90;i+=7) {
             foodmap.add(new Pair(72, i));
         }
@@ -339,25 +351,25 @@ for (int i = 1;i < 90;i+=4) {
             }
         }
     }
-public void drowf(GL gl) {
+    public void drowf(GL gl) {
 
 
-    Iterator itr = foodmap.iterator();
+        Iterator itr = foodmap.iterator();
 
-    while (itr.hasNext()){
+        while (itr.hasNext()){
 
-        Pair p = (Pair) itr.next();
-        DrawFood(gl, p.getX(), p.getY(), .1f);
+            Pair p = (Pair) itr.next();
+            DrawFood(gl, p.getX(), p.getY(), .1f);
 //
 //        System.out.println(p.getX());
 //       System.out.println(p.getY());
 
+        }
     }
-}
 
 
 
-   // boolean flag=true;
+    // boolean flag=true;
 //    public void isvisibal(double i,double j){
 ////        if(x==i/0.1)
 ////            System.out.println(i);
@@ -371,36 +383,36 @@ public void drowf(GL gl) {
 
     public void DrawFood (GL gl,int x, int y, float scale ){
 //        if(50==x&&y==50)
-     double m = (x/(maxWidth/2.0) - 0.9);
-      double n=(y/(maxHeight/2.0) - 0.9);
+        double m = (x/(maxWidth/2.0) - 0.9);
+        double n=(y/(maxHeight/2.0) - 0.9);
 
 
 
-            gl.glEnable(GL.GL_BLEND);
-            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[20]);    // Turn Blending On
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[20]);    // Turn Blending On
 
 
-            gl.glPushMatrix();
-            gl.glTranslated(m, n, 0);
-         //   gl.glScaled(scale, scale, 1);
-            gl.glScaled(0.1*scale, 0.1*scale, 1);
+        gl.glPushMatrix();
+        gl.glTranslated(m, n, 0);
+        //   gl.glScaled(scale, scale, 1);
+        gl.glScaled(0.1*scale, 0.1*scale, 1);
 
-            //System.out.println(x +" " + y);
-            gl.glBegin(GL.GL_QUADS);
-            // Front Face
-            gl.glTexCoord2f(0.0f, 0.0f);
-            gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-            gl.glTexCoord2f(1.0f, 0.0f);
-            gl.glVertex3f(1.0f, -1.0f, -1.0f);
-            gl.glTexCoord2f(1.0f, 1.0f);
-            gl.glVertex3f(1.0f, 1.0f, -1.0f);
-            gl.glTexCoord2f(0.0f, 1.0f);
-            gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-            gl.glEnd();
-            gl.glPopMatrix();
+        //System.out.println(x +" " + y);
+        gl.glBegin(GL.GL_QUADS);
+        // Front Face
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
 
 
-            gl.glDisable(GL.GL_BLEND);
+        gl.glDisable(GL.GL_BLEND);
 
     }
 
@@ -513,20 +525,20 @@ public void drowf(GL gl) {
 
 
 
-                    gl.glPushMatrix();
-                    gl.glTranslated(0.25, 2, 0);
-                    gl.glScaled(0.25, 0.25, 1);
-                    gl.glBegin(GL.GL_QUADS);
-                    gl.glTexCoord2f(0.0f, 0.0f);
-                    gl.glVertex2d(x, y + 2);
-                    gl.glTexCoord2f(0.0f, 1.0f);
-                    gl.glVertex2d(x, y + 3);
-                    gl.glTexCoord2f(1.0f, 1.0f);
-                    gl.glVertex2d(x + 1, y + 3);
-                    gl.glTexCoord2f(1.0f, 0.0f);
-                    gl.glVertex2d(x + 1, y + 2);
-                    gl.glEnd();
-                    gl.glPopMatrix();
+        gl.glPushMatrix();
+        gl.glTranslated(0.25, 2, 0);
+        gl.glScaled(0.25, 0.25, 1);
+        gl.glBegin(GL.GL_QUADS);
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex2d(x, y + 2);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex2d(x, y + 3);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex2d(x + 1, y + 3);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex2d(x + 1, y + 2);
+        gl.glEnd();
+        gl.glPopMatrix();
 
 
 
@@ -576,7 +588,6 @@ public void drowf(GL gl) {
 //        }
 /*
         1 = Rigth , 2=Down  , 3 =left , 0= up
-
          */
 //        if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
 //            if (x > 0) {
