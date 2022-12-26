@@ -8,6 +8,7 @@ package Man;
 //package project;
 
 import Texture.TextureReader;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -113,8 +114,13 @@ public class pac extends AnimListener {
 
         drowf(gl);
         iseat();
+        TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+        textRenderer.beginRendering(maxWidth, maxWidth);
+        textRenderer.draw(String.valueOf(counter),1, 40);
+        textRenderer.endRendering();
 
     }
+
     int dead =3;
     public void drawghost(GL gl){
 
@@ -1171,6 +1177,38 @@ public class pac extends AnimListener {
         }
         if (y >= 0 && y <= 40 && x == 90) {
             x--;
+        }
+        if (x >= 74&& x<=81 && y==11) {
+            y--;
+        }
+
+        if (y >= 60&& y<=90 && x==0) {
+            x++;
+        }
+        if (y >= 0&& y<=40 && x==0) {
+            x++;
+        }
+
+        if (y >= 60&& y<=90 && x==90) {
+            x--;
+
+        }
+        if (y >= 0&& y<=40 && x==90) {
+            x--;
+        }
+        if (x >= 85&& x<=100 && y==51) {
+            y--;
+
+        }
+        if (x >= -100&& x<=6 && y==51) {
+            y--;
+        }
+        if (x >= 85&& x<=100 && y==45) {
+            y++;
+
+        }
+        if (x >= -100&& x<=6 && y==45) {
+            y++;
         }
         return false;
     }
