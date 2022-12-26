@@ -30,12 +30,27 @@ HashSet<Pair> foodmap=new HashSet<>();
     AnimGLEventListener3.Directions direction = AnimGLEventListener3.Directions.up;
 
     int animationIndex = 0;
+    int index = 4;
+    int index1 = 8;
+    int index2= 12;
+    int index3 = 16;
+int index4 = 4;
+int index5 = 12;
     int maxWidth = 100;
     int maxHeight = 100;
-    int n = maxWidth/2, m = maxHeight/2;
-    int x =maxWidth-110/2, y = maxHeight-160/2; // 45 ,20
+    int m = 18, n=90 ;
+    int m1 = 72,n1=90;
+    int m2 = 89,n2 = 78;
+    int m3 = 1,n3 = 78;
+    int m4 = 89,n4 =0;
+    int m5=1,n5=0;
 
-    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","point.png","maze.png"};
+    int x =maxWidth/2, y = maxHeight/2; // 45 ,20
+boolean down;
+boolean right;
+boolean up;
+boolean left ;
+    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","redup1.png","reddown1.png","redright1.png","redleft1.png","pinkup1.png","pinkdown1.png","pinkright1.png","pinkleft1.png","greenup1.png","greendown1.png","greenright1.png","greenleft1.png","yellowup1.png","yellowdown1.png","yellowright1.png","yellowleft1.png","point.png","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -87,6 +102,13 @@ HashSet<Pair> foodmap=new HashSet<>();
 
 
         animationIndex = animationIndex % 4;
+        index= index % 8 ;
+        index1 = index1 %12;
+        index2 = index2 %16;
+        index3 = index3 %20;
+        index4 = index4 % 8;
+        index5 = index5 % 16;
+
 //        DrawGraph(gl);
         drawPoints(gl);
         DrawBackground(gl);
@@ -97,21 +119,106 @@ HashSet<Pair> foodmap=new HashSet<>();
         }
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
 
+        DrawGhost(gl,m,n,index,0.5f);
+        if (down){
+            if(n>=10){
+                n--;
+                index = 5;
+            }
+            else
+                down = false;
+        }
+        else if (n<=90) {
+            n++;
+            index = 4;
+        }else
+            down = true;
+        DrawGhost(gl,m1,n1,index1,0.5f);
+        if (down){
+            if(n1 > 10){
+                n1--;
+                index1 = 9;
+            }
+            else
+                down = false;
+        }
+        else if (n1<=90) {
+            n1++;
+            index1 = 8 ;
+        }
+        else
+            down = true;
 
+        DrawGhost(gl,m2,n2,index2,0.5f);
+        if (left){
+            if(m2>=0) {
+                m2--;
+                index2 =15;
+            }
+            else
+                left = false;
+        }
+        else if (m2<=90) {
+            m2++;
+        index2 = 14;
+        }
+        else
+            left = true;
+
+        DrawGhost(gl,m3,n3,index3,0.5f);
+        if (right){
+            if(m3>=0) {
+                m3--;
+                index3=19;
+            }else
+                right = false;
+        }
+        else if (m3<=90) {
+            m3++;
+            index3 = 18;
+        }
+        else
+            right = true;
+        DrawGhost(gl,m4,n4,index4,0.5f);
+        if (left){
+            if(m4>=0) {
+                m4--;
+                index4 = 7;
+            }else
+                left = false;
+        }
+        else if (m4<=90) {
+            m4++;
+            index4 = 6;
+        }
+        else
+            left = true;
+        DrawGhost(gl,m5,n5,index5,0.5f);
+        if (right){
+            if(m5>=0){
+                m5--;
+                index5 = 15;
+            }
+            else
+                right = false;
+        }
+        else if (m5<=90) {
+            m5++;
+            index5 = 14;
+        }
+        else
+            right = true;
         handleKeyPress();
 
 
         gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
 
-        //drowOcircle(gl, 1,new Color(0,0,1,1),21,90,8);
 
-        //foodmap.add(new Pair(1,1));
-        //
-
-        //foodmap.contains(new Pair(x,y));
+        bounds();
 
         drowf(gl);
         iseat();
+
         }
 
         public void points(GL gl){
@@ -219,23 +326,19 @@ for (int i = 1;i < 90;i+=4) {
         foodmap.add(new Pair(40,68));
     }
 
-int counter = 0;
-        public void iseat() {
-            for (int i = -3; i < 3; i++) {
-                for (int j = -3; j < 3; j++) {
+    int counter = 0;
+    public void iseat() {
+        for (int i = -2; i < 2; i++) {
+            for (int j = -2; j < 2; j++) {
 
-                    if (foodmap.contains(new Pair(x+i,y+j))) {
-                        foodmap.remove(new Pair(x+i, y+j));
-                        counter++;
-break;
-                    }
+                if (foodmap.contains(new Pair(x + i, y + j))) {
+                    foodmap.remove(new Pair(x + i, y + j));
+                    counter++;
+                    break;
                 }
-
-//System.out.println(counter);
-
             }
         }
-
+    }
 public void drowf(GL gl) {
 
 
@@ -274,7 +377,7 @@ public void drowf(GL gl) {
 
 
             gl.glEnable(GL.GL_BLEND);
-            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[4]);    // Turn Blending On
+            gl.glBindTexture(GL.GL_TEXTURE_2D, textures[20]);    // Turn Blending On
 
 
             gl.glPushMatrix();
@@ -324,6 +427,39 @@ public void drowf(GL gl) {
         gl.glDisable(GL.GL_BLEND);
     }
 
+
+
+    public void DrawGhost(GL gl,float m, float n, int index, float scale){
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
+        double w = (m/(maxWidth/2.0) - 0.9); //0
+        double z=(n/(maxHeight/2.0) - 0.9);//-0.5
+
+        gl.glPushMatrix();
+        gl.glTranslated( w, z, 0);
+        gl.glScaled(0.1*scale, 0.1*scale, 1);
+
+
+
+
+
+        //System.out.println(x +" " + y);
+        gl.glBegin(GL.GL_QUADS);
+        // Front Face
+        gl.glTexCoord2f(0.0f, 0.0f);
+        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 0.0f);
+        gl.glVertex3f(1.0f, -1.0f, -1.0f);
+        gl.glTexCoord2f(1.0f, 1.0f);
+        gl.glVertex3f(1.0f, 1.0f, -1.0f);
+        gl.glTexCoord2f(0.0f, 1.0f);
+        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
+        gl.glEnd();
+        gl.glPopMatrix();
+
+
+        gl.glDisable(GL.GL_BLEND);
+    }
 
 
     //    public void DrawSprite(GL gl,int x, int y, int index, float scale , int dir){
@@ -481,559 +617,554 @@ public void drowf(GL gl) {
 //            direction= AnimGLEventListener3.Directions.up_left;
 //            animationIndex++;
 //        }
-         if (isKeyPressed(KeyEvent.VK_LEFT)) {
+        if (isKeyPressed(KeyEvent.VK_LEFT)) {
             if (x > -10) {
                 x--;
+            } else if (x == -10) {
+                x = 90;
             }
-
-            else if (x == -10) {
-                x=90;
-            }
-            direction= AnimGLEventListener3.Directions.left;
+            direction = AnimGLEventListener3.Directions.left;
             animationIndex++;
 
-        }else
-        if (isKeyPressed(KeyEvent.VK_RIGHT)) {
-            if (x < maxWidth+10) {
+        } else if (isKeyPressed(KeyEvent.VK_RIGHT)) {
+            if (x < maxWidth + 10) {
                 x++;
+            } else if (x == maxWidth + 10) {
+                x = 0;
             }
-            else if (x == maxWidth+10) {
-                x=0;
-            }
-            direction= AnimGLEventListener3.Directions.right;
+            direction = AnimGLEventListener3.Directions.right;
             animationIndex++;
-        }else
-        if (isKeyPressed(KeyEvent.VK_DOWN)) {
+        } else if (isKeyPressed(KeyEvent.VK_DOWN)) {
             if (y > 0) {
                 y--;
             }
-            direction= AnimGLEventListener3.Directions.down;
+            direction = AnimGLEventListener3.Directions.down;
             animationIndex++;
-        }else
-        if (isKeyPressed(KeyEvent.VK_UP)) {
-            if (y < maxHeight-10) {
+        } else if (isKeyPressed(KeyEvent.VK_UP)) {
+            if (y < maxHeight - 10) {
                 y++;
             }
-            direction= AnimGLEventListener3.Directions.up;
+            direction = AnimGLEventListener3.Directions.up;
             animationIndex++;
         }
+    }
 
+    public boolean bounds() {
         //elbab
 //        if (x >= 31&& x<=59 && y==57 ) {
 //
 //            y++;
 //        }
-        if (x >= 31&& x<=43 && y==57 ) {
+        if (x >= 31 && x <= 43 && y == 57) {
 
             y++;
 
         }
-        if (x >= 48&& x<=59 && y==57 ) {
+        if (x >= 48 && x <= 59 && y == 57) {
 
             y++;
         }
-        if (x >= 31&& x<=43 && y==52 ) {
+        if (x >= 31 && x <= 43 && y == 52) {
 
             y--;
         }
-        if (x >= 48&& x<=59 && y==52 ) {
+        if (x >= 48 && x <= 59 && y == 52) {
 
             y--;
         }
         //////////////////////
-        if (y >= 40&& y<=56 && x==36) {
+        if (y >= 40 && y <= 56 && x == 36) {
             x++;
         }
         /////
-        if (y >= 40&& y<=56&& x==31) {
+        if (y >= 40 && y <= 56 && x == 31) {
             x--;
         }
         //////////////////////////////////
-        if (y >= 40&& y<=56 && x==59) {
+        if (y >= 40 && y <= 56 && x == 59) {
             x++;
 
 
         }
         /////
-        if (y >= 40&& y<=56&& x==55) {
+        if (y >= 40 && y <= 56 && x == 55) {
             x--;
         }
         //taht el bab 2
         ////////////////////////////////////////////////
-        if (x >= 31&& x<=59 && y==37  ) {
+        if (x >= 31 && x <= 59 && y == 37) {
             y++;
         }
 
-        if (x >= 31&& x<=59 && y==30  ) {
+        if (x >= 31 && x <= 59 && y == 30) {
             y--;
         }
         //el2fla
         /////////////////////////////////////////////////////
-        if (x >= 31&& x<=59 && y==46  ) {
+        if (x >= 31 && x <= 59 && y == 46) {
             y++;
         }
-        if (x >= 31&& x<=59 && y==40  ) {
+        if (x >= 31 && x <= 59 && y == 40) {
             y--;
         }
         ///////////////////////////////////////////////////////
-        if (x >= 31&& x<=59 && y==18  ) {
+        if (x >= 31 && x <= 59 && y == 18) {
             y++;
         }
-        if (x >= 31&& x<=59 && y==11  ) {
+        if (x >= 31 && x <= 59 && y == 11) {
             y--;
         }
         ////////////////////////////////////////////////
         //el etnin elly taht
-        if (x >= 3&& x<=37 && y==1 ) {
+        if (x >= 3 && x <= 37 && y == 1) {
             y--;
         }
-        if (x >= 52&& x<=88 && y==1 ) {
+        if (x >= 52 && x <= 88 && y == 1) {
             y--;
         }
-        if (x >= 52&& x<=88 && y==8 ) {
+        if (x >= 52 && x <= 88 && y == 8) {
             y++;
         }
-        if (x >= 3&& x<=37 && y==8 ) {
+        if (x >= 3 && x <= 37 && y == 8) {
             y++;
         }
         /////////////////////elly fo2///////////////////////////
-        if (x >= 31&& x<=59 && y==76 ) {
+        if (x >= 31 && x <= 59 && y == 76) {
             y++;
         }
-        if (x >= 31&& x<=59 && y==69 ) {
+        if (x >= 31 && x <= 59 && y == 69) {
             y--;
         }
         //////////////////////////////////
-        if (x >= 3&& x<=17 && y==89 ) {
+        if (x >= 3 && x <= 17 && y == 89) {
             y++;
         }
-        if (x >= 3&& x<=17 && y==79 ) {
+        if (x >= 3 && x <= 17 && y == 79) {
             y--;
         }
         /////////////////////////////////////////////
-        if (x >= 21&& x<=38 && y==89 ) {
+        if (x >= 21 && x <= 38 && y == 89) {
             y++;
         }
-        if (x >= 21&& x<=38 && y==79 ) {
+        if (x >= 21 && x <= 38 && y == 79) {
             y--;
         }
         //////////////////////////////////////
 
-        if (x >= 52&& x<=70 && y==89 ) {
+        if (x >= 52 && x <= 70 && y == 89) {
             y++;
         }
-        if (x >= 52&& x<=70 && y==79 ) {
+        if (x >= 52 && x <= 70 && y == 79) {
             y--;
         }
         ///////////////////////////////////////////////
-        if (x >= 74&& x<=88 && y==89 ) {
+        if (x >= 74 && x <= 88 && y == 89) {
             y++;
         }
-        if (x >= 74&& x<=88 && y==79 ) {
+        if (x >= 74 && x <= 88 && y == 79) {
             y--;
         }
         /////////////////////////////////////////////////////
-        if (x >= 74&& x<=88 && y==76 ) {
+        if (x >= 74 && x <= 88 && y == 76) {
             y++;
         }
-        if (x >= 74&& x<=88 && y==69 ) {
+        if (x >= 74 && x <= 88 && y == 69) {
             y--;
         }
         ////////////////////////////////////////
-        if (x >= 3&& x<=16 && y==76 ) {
+        if (x >= 3 && x <= 16 && y == 76) {
             y++;
         }
-        if (x >= 3&& x<=16 && y==69 ) {
+        if (x >= 3 && x <= 16 && y == 69) {
             y--;
         }///////////////////////////////////////////
-        if (x >= 74&& x<=90 && y==66) {
+        if (x >= 74 && x <= 90 && y == 66) {
             y++;
         }
-        if (x >= 74&& x<=90 && y==50 ) {
+        if (x >= 74 && x <= 90 && y == 50) {
             y--;
         }//////////////////////////////////////
-        if (x >= 0&& x<=16 && y==66) {
+        if (x >= 0 && x <= 16 && y == 66) {
             y++;
         }
-        if (x >= 0&& x<=16 && y==50 ) {
+        if (x >= 0 && x <= 16 && y == 50) {
             y--;
         }
         //////////////////////////////////////////
-        if (x >= 0&& x<=16 && y==46) {
+        if (x >= 0 && x <= 16 && y == 46) {
             y++;
         }
-        if (x >= 0&& x<=16 && y==31 ) {
+        if (x >= 0 && x <= 16 && y == 31) {
             y--;
         }
         /////////////////////////////////////////////////
-        if (x >= 74&& x<=90 && y==46) {
+        if (x >= 74 && x <= 90 && y == 46) {
             y++;
         }
-        if (x >= 74&& x<=90 && y==31 ) {
+        if (x >= 74 && x <= 90 && y == 31) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 74&& x<=88 && y==27) {
+        if (x >= 74 && x <= 88 && y == 27) {
             y++;
         }
-        if (x >= 74&& x<=88  && y==21 ) {
+        if (x >= 74 && x <= 88 && y == 21) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 3&& x<=16 && y==27) {
+        if (x >= 3 && x <= 16 && y == 27) {
             y++;
         }
-        if (x >= 3&& x<=16  && y==21 ) {
+        if (x >= 3 && x <= 16 && y == 21) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 20&& x<=38 && y==27) {
+        if (x >= 20 && x <= 38 && y == 27) {
             y++;
         }
-        if (x >= 20&& x<=38  && y==21 ) {
+        if (x >= 20 && x <= 38 && y == 21) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 52&& x<=70 && y==27) {
+        if (x >= 52 && x <= 70 && y == 27) {
             y++;
         }
-        if (x >= 52&& x<=70  && y==21 ) {
+        if (x >= 52 && x <= 70 && y == 21) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 0&& x<=6 && y==18) {
+        if (x >= 0 && x <= 6 && y == 18) {
             y++;
         }
-        if (x >= 0&& x<=6  && y==11 ) {
+        if (x >= 0 && x <= 6 && y == 11) {
             y--;
         }
         ////////////////////////////////////////////////////
-        if (x >= 84&& x<=90 && y==18) {
+        if (x >= 84 && x <= 90 && y == 18) {
             y++;
         }
-        if (x >= 84&& x<=90  && y==11 ) {
+        if (x >= 84 && x <= 90 && y == 11) {
             y--;
         }
         ///////////////////////////////////Y////////////////////////////////////////
-        if (y >= 50&& y<=65 && x==74) {
+        if (y >= 50 && y <= 65 && x == 74) {
             x--;
         }
         //////////////////////////////////////
-        if (y >= 31&& y<=46 && x==74) {
+        if (y >= 31 && y <= 46 && x == 74) {
             x--;
         }
         ///////////////////////////////////Y////////////////////////////////////////
-        if (y >= 50&& y<=65 && x==17) {
+        if (y >= 50 && y <= 65 && x == 17) {
             x++;
         }
         //////////////////////////////////////
-        if (y >= 31&& y<=46 && x==17) {
+        if (y >= 31 && y <= 46 && x == 17) {
             x++;
         }
         //////////////////////////////////////////////////
-        if (y >= 50&& y<=75 && x==27) {
+        if (y >= 50 && y <= 75 && x == 27) {
             x++;
         }
         //////////////////////////////////////
-        if (y >= 50&& y<=75 && x==20) {
+        if (y >= 50 && y <= 75 && x == 20) {
             x--;
         }
         //////////////////////////////////////////////////
-        if (y >= 50&& y<=75 && x==70) {
+        if (y >= 50 && y <= 75 && x == 70) {
             x++;
         }
         //////////////////////////////////////
-        if (y >= 50&& y<=75 && x==63) {
+        if (y >= 50 && y <= 75 && x == 63) {
             x--;
         }
 
         ///////////////////
-        if (y >= 60&& y<=72 && x==48) {
+        if (y >= 60 && y <= 72 && x == 48) {
             x++;
         }
         //////////////////////////////////////
-        if (y >= 60&& y<=72 && x==42) {
+        if (y >= 60 && y <= 72 && x == 42) {
             x--;
         }
 
         ///////////////////
-        if (y >= 79&& y<=90 && x==48) {
+        if (y >= 79 && y <= 90 && x == 48) {
             x++;
         }
         //////////////////////////////////////
-        if (y >= 79&& y<=90 && x==42) {
+        if (y >= 79 && y <= 90 && x == 42) {
             x--;
         }
         //////////////////////////////////////
-        if (y >= 31&& y<=46 && x==70) {
+        if (y >= 31 && y <= 46 && x == 70) {
             x++;
         }
         //
-        if (y >= 31&& y<=46 && x==63) {
+        if (y >= 31 && y <= 46 && x == 63) {
             x--;
         }
         //////////////////////////////////////
-        if (y >= 31&& y<=46 && x==27) {
+        if (y >= 31 && y <= 46 && x == 27) {
             x++;
         }
         /////
-        if (y >= 31&& y<=46 && x==20) {
+        if (y >= 31 && y <= 46 && x == 20) {
             x--;
         }
         /////////////////////////////////////
-        if (y >= 21&& y<=34 && x==49) {
+        if (y >= 21 && y <= 34 && x == 49) {
             x++;
         }
         /////
-        if (y >= 21&& y<=34 && x==42) {
+        if (y >= 21 && y <= 34 && x == 42) {
             x--;
         }
 
         /////////////////////////////////////
-        if (y >= 11&& y<=26 && x==16) {
+        if (y >= 11 && y <= 26 && x == 16) {
             x++;
         }
         /////
-        if (y >= 11&& y<=26 && x==9) {
+        if (y >= 11 && y <= 26 && x == 9) {
             x--;
         }
         /////////////////////////////
-        if (y >= 11&& y<=26 && x==81) {
+        if (y >= 11 && y <= 26 && x == 81) {
             x++;
         }
         /////
-        if (y >= 11&& y<=26 && x==74) {
+        if (y >= 11 && y <= 26 && x == 74) {
             x--;
         }
         /////////////////////////////
-        if (y >= 5&& y<=17 && x==27) {
+        if (y >= 5 && y <= 17 && x == 27) {
             x++;
         }
         /////
-        if (y >= 5&& y<=17&& x==20) {
+        if (y >= 5 && y <= 17 && x == 20) {
             x--;
         }
         /////////////////////////////
-        if (y >= 2&& y<=17 && x==49) {
+        if (y >= 2 && y <= 17 && x == 49) {
             x++;
         }
         /////
-        if (y >= 2&& y<=17&& x==42) {
+        if (y >= 2 && y <= 17 && x == 42) {
             x--;
         }
         /////////////////////////////
-        if (y >= 5&& y<=17 && x==70) {
+        if (y >= 5 && y <= 17 && x == 70) {
             x++;
         }
         /////
-        if (y >= 5&& y<=17&& x==63) {
+        if (y >= 5 && y <= 17 && x == 63) {
             x--;
         }
         /////////////////////////////////////////////////
-        if (x >= 25&& x<=38 && y==66) {
+        if (x >= 25 && x <= 38 && y == 66) {
             y++;
         }
-        if (x >= 25&& x<=38  && y==59 ) {
+        if (x >= 25 && x <= 38 && y == 59) {
             y--;
         }
         /////////////////////
-        if (x >= 52&& x<=67 && y==66) {
+        if (x >= 52 && x <= 67 && y == 66) {
             y++;
         }
-        if (x >= 52&& x<=67 && y==59 ) {
+        if (x >= 52 && x <= 67 && y == 59) {
             y--;
         }
         ////////////////////smalls one
-        if (y >= 80&& y<=88 && x==88) {
+        if (y >= 80 && y <= 88 && x == 88) {
             x++;
         }
-        if (y >= 80&& y<=88 && x==74) {
+        if (y >= 80 && y <= 88 && x == 74) {
             x--;
         }
-        if (y >= 80&& y<=88 && x==70) {
+        if (y >= 80 && y <= 88 && x == 70) {
             x++;
         }
-        if (y >= 80&& y<=88 && x==52) {
+        if (y >= 80 && y <= 88 && x == 52) {
             x--;
         }
 
-        if (y >= 80&& y<=88 && x==38) {
+        if (y >= 80 && y <= 88 && x == 38) {
             x++;
         }
-        if (y >= 80&& y<=88 && x==20) {
+        if (y >= 80 && y <= 88 && x == 20) {
             x--;
         }
-        if (y >= 80&& y<=88 && x==16) {
+        if (y >= 80 && y <= 88 && x == 16) {
             x++;
         }
-        if (y >= 80&& y<=88 && x==2) {
+        if (y >= 80 && y <= 88 && x == 2) {
             x--;
         }
 //
-        if (y >= 70&& y<=75 && x==16) {
+        if (y >= 70 && y <= 75 && x == 16) {
             x++;
         }
-        if (y >= 70&& y<=75 && x==2) {
+        if (y >= 70 && y <= 75 && x == 2) {
             x--;
         }
         //
-        if (y >= 70&& y<=75 && x==88) {
+        if (y >= 70 && y <= 75 && x == 88) {
             x++;
         }
-        if (y >= 70&& y<=75 && x==74) {
+        if (y >= 70 && y <= 75 && x == 74) {
             x--;
         }
         //
-        if (y >= 70&& y<=75 && x==59) {
+        if (y >= 70 && y <= 75 && x == 59) {
             x++;
         }
-        if (y >= 70&& y<=75 && x==31) {
+        if (y >= 70 && y <= 75 && x == 31) {
             x--;
         }
         ///
-        if (y >= 60&& y<=66 && x==38) {
+        if (y >= 60 && y <= 66 && x == 38) {
             x++;
         }
-        if (y >= 60&& y<=66&& x==52) {
+        if (y >= 60 && y <= 66 && x == 52) {
             x--;
         }
         ///
-        if (y >= 31&& y<=37 && x==59) {
+        if (y >= 31 && y <= 37 && x == 59) {
             x++;
         }
-        if (y >= 31&& y<=37 && x==31) {
+        if (y >= 31 && y <= 37 && x == 31) {
             x--;
         }
         ////
-        if (y >= 21&& y<=27 && x==38) {
+        if (y >= 21 && y <= 27 && x == 38) {
             x++;
         }
-        if (y >= 21&& y<=27  && x==20) {
+        if (y >= 21 && y <= 27 && x == 20) {
             x--;
         }
 ////
-        if (y >= 21&& y<=27  && x==2) {
+        if (y >= 21 && y <= 27 && x == 2) {
             x--;
         }
-        if (y >= 21&& y<=27  && x==88) {
+        if (y >= 21 && y <= 27 && x == 88) {
             x++;
         }
         ////
-        if (y >= 21&& y<=27 && x==70) {
+        if (y >= 21 && y <= 27 && x == 70) {
             x++;
         }
-        if (y >= 21&& y<=27  && x==52) {
+        if (y >= 21 && y <= 27 && x == 52) {
             x--;
         }
         ///
-        if (y >= 11&& y<=18  && x==85) {
+        if (y >= 11 && y <= 18 && x == 85) {
             x--;
         }
-        if (y >= 11&& y<=18&& x==5) {
+        if (y >= 11 && y <= 18 && x == 5) {
             x++;
         }
         /////
-        if (y >= 11&& y<=18 && x==59) {
+        if (y >= 11 && y <= 18 && x == 59) {
             x++;
         }
-        if (y >= 11&& y<=18  && x==31) {
+        if (y >= 11 && y <= 18 && x == 31) {
             x--;
         }
         ///
-        if (y >= 2&& y<=8 && x==38) {
+        if (y >= 2 && y <= 8 && x == 38) {
             x++;
         }
-        if (y >= 2&& y<=8  && x==3) {
+        if (y >= 2 && y <= 8 && x == 3) {
             x--;
         }
         ///
-        if (y >= 2&& y<=8 && x==87) {
+        if (y >= 2 && y <= 8 && x == 87) {
             x++;
         }
-        if (y >= 2&& y<=8  && x==52) {
+        if (y >= 2 && y <= 8 && x == 52) {
             x--;
         }
         //////////
-        if (y >= 53&& y<=57 && x==42) {
+        if (y >= 53 && y <= 57 && x == 42) {
             x++;
         }
-        if (y >= 53&& y<=57  && x==48) {
+        if (y >= 53 && y <= 57 && x == 48) {
             x--;
         }
 
         //////////
-        if (x >= 21&& x<=27 && y==75) {
+        if (x >= 21 && x <= 27 && y == 75) {
             y++;
         }
-        if (x >= 21&& x<=27 && y==51) {
+        if (x >= 21 && x <= 27 && y == 51) {
             y--;
         }
 
         //
-        if (x >= 21&& x<=27 && y==47) {
+        if (x >= 21 && x <= 27 && y == 47) {
             y++;
         }
-        if (x >= 21&& x<=27 && y==30) {
+        if (x >= 21 && x <= 27 && y == 30) {
             y--;
         }
         ////
-        if (x >= 21&& x<=27 && y==17) {
+        if (x >= 21 && x <= 27 && y == 17) {
             y++;
         }
         ////
-        if (x >= 41&& x<=50 && y==2) {
+        if (x >= 41 && x <= 50 && y == 2) {
             y--;
         }
 
-        if (x >= 41&& x<=50 && y==21) {
+        if (x >= 41 && x <= 50 && y == 21) {
             y--;
         }
-        if (x >= 41&& x<=50 && y==60) {
+        if (x >= 41 && x <= 50 && y == 60) {
             y--;
         }
-        if (x >= 41&& x<=50 && y==80) {
+        if (x >= 41 && x <= 50 && y == 80) {
             y--;
 
         }
-        if (x >= 63&& x<=70 && y==75) {
+        if (x >= 63 && x <= 70 && y == 75) {
             y++;
         }
-        if (x >= 63&& x<=70 && y==50) {
+        if (x >= 63 && x <= 70 && y == 50) {
             y--;
         }
         ////
-        if (x >= 63&& x<=70 && y==47) {
+        if (x >= 63 && x <= 70 && y == 47) {
             y++;
         }
-        if (x >= 63&& x<=70 && y==31) {
+        if (x >= 63 && x <= 70 && y == 31) {
             y--;
         }
-        if (x >= 63&& x<=70 && y==18) {
+        if (x >= 63 && x <= 70 && y == 18) {
             y++;
         }
-        if (x >= 74&& x<=81 && y==11) {
+        if (x >= 74 && x <= 81 && y == 11) {
             y--;
         }
 
-        if (y >= 60&& y<=90 && x==0) {
+        if (y >= 60 && y <= 90 && x == 0) {
             x++;
         }
-        if (y >= 0&& y<=40 && x==0) {
+        if (y >= 0 && y <= 40 && x == 0) {
             x++;
         }
 
-        if (y >= 60&& y<=90 && x==90) {
+        if (y >= 60 && y <= 90 && x == 90) {
             x--;
 
         }
-        if (y >= 0&& y<=40 && x==90) {
+        if (y >= 0 && y <= 40 && x == 90) {
             x--;
         }
-
-
-
-
+        return false;
     }
+
+
 
     public BitSet keyBits = new BitSet(256);
 
