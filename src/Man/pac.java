@@ -21,38 +21,37 @@ import javax.media.opengl.glu.GLU;
 
 public class pac extends AnimListener {
 
-    boolean balls[][];
-    boolean states[][];
-    boolean creatEeat = true;
+    boolean balls [][];
+    boolean states [][];
+    boolean creatEeat=true;
 
-    HashSet<Pair> foodmap = new HashSet<>();
+    HashSet<Pair> foodmap=new HashSet<>();
 
 
     AnimGLEventListener3.Directions direction = AnimGLEventListener3.Directions.up;
-    int counter = 0;
-    int dead=3;
+
     int animationIndex = 0;
     int index = 4;
     int index1 = 8;
-    int index2 = 12;
+    int index2= 12;
     int index3 = 16;
     int index4 = 4;
     int index5 = 12;
     int maxWidth = 100;
     int maxHeight = 100;
-    int m = 18, n = 90;
-    int m1 = 72, n1 = 90;
-    int m2 = 89, n2 = 78;
-    int m3 = 1, n3 = 78;
-    int m4 = 89, n4 = 0;
-    int m5 = 1, n5 = 0;
+    int m = 18, n=90 ;
+    int m1 = 72,n1=90;
+    int m2 = 89,n2 = 78;
+    int m3 = 1,n3 = 78;
+    int m4 = 89,n4 =0;
+    int m5=1,n5=0;
 
-    int x = maxWidth / 2, y = maxHeight / 2; // 45 ,20
+    int x =maxWidth/2, y = maxHeight/2; // 45 ,20
     boolean down;
     boolean right;
     boolean up;
-    boolean left;
-    String textureNames[] = {"pacman_3_3.png", "pacman_3_2.png", "pacman_3_0.png", "pacman_3_3.png", "redup1.png", "reddown1.png", "redright1.png", "redleft1.png", "pinkup1.png", "pinkdown1.png", "pinkright1.png", "pinkleft1.png", "greenup1.png", "greendown1.png", "greenright1.png", "greenleft1.png", "yellowup1.png", "yellowdown1.png", "yellowright1.png", "yellowleft1.png", "point.png", "lives.png", "score.png", "maze.png"};
+    boolean left ;
+    String textureNames[] = {"pacman_3_3.png","pacman_3_2.png","pacman_3_0.png","pacman_3_3.png","redup1.png","reddown1.png","redright1.png","redleft1.png","pinkup1.png","pinkdown1.png","pinkright1.png","pinkleft1.png","greenup1.png","greendown1.png","greenright1.png","greenleft1.png","yellowup1.png","yellowdown1.png","yellowright1.png","yellowleft1.png","point.png","maze.png"};
     TextureReader.Texture texture[] = new TextureReader.Texture[textureNames.length];
     int textures[] = new int[textureNames.length];
 
@@ -69,9 +68,9 @@ public class pac extends AnimListener {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glGenTextures(textureNames.length, textures, 0);
 
-        for (int i = 0; i < textureNames.length; i++) {
+        for(int i = 0; i < textureNames.length; i++){
             try {
-                texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i], true);
+                texture[i] = TextureReader.readTexture(assetsFolderName + "//" + textureNames[i] , true);
                 gl.glBindTexture(GL.GL_TEXTURE_2D, textures[i]);
 
 //                mipmapsFromPNG(gl, new GLU(), texture[i]);
@@ -83,7 +82,7 @@ public class pac extends AnimListener {
                         GL.GL_UNSIGNED_BYTE,
                         texture[i].getPixels() // Imagedata
                 );
-            } catch (IOException e) {
+            } catch( IOException e ) {
                 System.out.println(e);
                 e.printStackTrace();
             }
@@ -91,82 +90,38 @@ public class pac extends AnimListener {
 
     }
 
-    int r = 50;
+    int r=50;
 
     public void display(GLAutoDrawable gld) {
         GL gl = gld.getGL();
+
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        //Clear The Screen And The Depth Buffer
         gl.glLoadIdentity();
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length - 2]);
+// a3ml el title Screen
+        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
+
+
         handleKeyPress();
-        TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
-        textRenderer.beginRendering(maxWidth, maxWidth);
-        textRenderer.draw(String.valueOf(counter), 1, 40);
-        textRenderer.endRendering();
+
 
         gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+
+
         drawghost(gl);
-        drawPoints(gl);
-        DrawBackground(gl);
-        if (creatEeat) {
-
-            points(gl);
-
-        }
-
-        DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
-
-
 
         bounds();
+
         drowf(gl);
         iseat();
-        kill(gl);
-        isdead(gl);
-        DrawScore(gl, 5, 60, index, 2f);
-    }
-boolean p;
-   // boolean isdead = true
-
-
-
-// Assign the first line of code to the first element of the array
-
-boolean visable;
-    public void isdead(GL gl) {
-
-
-        if (dead == 3) {
-
-            DrawLive(gl, 90, 58, index, 0.3f);
-            DrawLive(gl, 85, 58, index, 0.3f);
-            DrawLive(gl, 80, 58, index, 0.3f);
-
-        }  if (dead == 2) {
-
-
-            DrawLive(gl, 90, 58, index, 0.3f);
-            DrawLive(gl, 85, 58, index, 0.3f);
-
-//
-        }  if (dead == 1) {
-            DrawLive(gl, 85, 58, index, 0.3f);
-
-
-
-            //DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
-        } else if (dead <= 0) {
-
-            TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 15), true, true);
-            textRenderer.beginRendering(maxWidth, maxWidth);
-            textRenderer.draw("GAME OVER ", 5, 50);
-            textRenderer.endRendering();
-            x=500;
-            y=500;
-        }
+        TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+        textRenderer.beginRendering(maxWidth, maxWidth);
+        textRenderer.draw(String.valueOf(counter),1, 40);
+        textRenderer.endRendering();
 
     }
 
+    int dead =3;
     public void drawghost(GL gl){
 
         animationIndex = animationIndex % 4;
@@ -178,8 +133,16 @@ boolean visable;
         index5 = index5 % 16;
 
 //        DrawGraph(gl);
+        drawPoints(gl);
+        DrawBackground(gl);
+        if (creatEeat) {
 
-        DrawGhost(gl,m,n,index,0.6f);
+            points(gl);
+
+        }
+        DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
+
+        DrawGhost(gl,m,n,index,0.5f);
 
 
         if (down){
@@ -381,6 +344,7 @@ boolean visable;
         foodmap.add(new Pair(40,68));
     }
 
+    int counter = 0;
     public void iseat() {
         for (int i = -2; i < 2; i++) {
             for (int j = -2; j < 2; j++) {
@@ -388,19 +352,9 @@ boolean visable;
                 if (foodmap.contains(new Pair(x + i, y + j))) {
                     foodmap.remove(new Pair(x + i, y + j));
                     counter++;
-
                     break;
                 }
             }
-        }
-        if(counter==151){
-
-            TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 15), true, true);
-            textRenderer.beginRendering(maxWidth, maxWidth);
-            textRenderer.draw("YOU WIN ", 15, 50);
-            textRenderer.endRendering();
-            x=500;
-            y=500;
         }
     }
     public void drowf(GL gl) {
@@ -418,45 +372,20 @@ boolean visable;
 
         }
     }
-boolean killed=true;
-    public void kill(GL gl) {
-        for (int i = -7; i < 7; i++) {
-            if (x  +i== m && y  +i== n) {
-               dead--;
-                System.out.println(dead);
-                x=50;
-                y=50;
-
-            } else if (x + i == m1 && y + i == n1) {
-               dead--;
-               x=50;
-               y=50;
-                System.out.println(dead);
-            } else if (x + i == m2 && y + i == n2) {
-                dead--;
-                x=50;
-                y=50;
-                System.out.println(dead);
-            } else if (x + i == m3 && y + i == n3) {
-                dead--;
-                x=50;
-                y=50;
-                System.out.println(dead);
-            } else if (x + i == m4 && y + i == n4) {
-                dead--;
-                System.out.println(dead);
-                x=50;
-                y=50;
-            } else if (x + i == m5 && y + i == n5) {
-                dead--;
-                System.out.println(dead);
-                x=50;
-                y=50;
-            }
-        }
-    }
 
 
+
+    // boolean flag=true;
+//    public void isvisibal(double i,double j){
+////        if(x==i/0.1)
+////            System.out.println(i);
+////        {flag=false;}
+//
+//        if(x==5/i&&y==5/j) {
+//            flag = false;
+//        }
+//
+//    }
 
     public void DrawFood (GL gl,int x, int y, float scale ){
 //        if(50==x&&y==50)
@@ -552,62 +481,7 @@ boolean killed=true;
 
 
     //    public void DrawSprite(GL gl,int x, int y, int index, float scale , int dir){
-    public void DrawLive(GL gl,int x, int y, int index, float scale ){
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[21]);	// Turn Blending On
-        double w = (x/(maxWidth/2.0) - 0.9); //0
-        double z=(y/(maxHeight/2.0) - 0.9);//-0.5
 
-        gl.glPushMatrix();
-        gl.glTranslated( w, z, 0);
-        gl.glScaled(0.1*scale, 0.1*scale, 1);
-
-///////
-
-        gl.glBegin(GL.GL_QUADS);
-        // Front Face
-        gl.glTexCoord2f(0.0f, 0.0f);
-        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 0.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 1.0f);
-        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-        gl.glTexCoord2f(0.0f, 1.0f);
-        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-        gl.glEnd();
-        gl.glPopMatrix();
-
-
-        gl.glDisable(GL.GL_BLEND);
-    }
-    public void DrawScore(GL gl,int x, int y, int index, float scale ){
-        gl.glEnable(GL.GL_BLEND);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, textures[22]);	// Turn Blending On
-        double w = (x/(maxWidth/2.0) - 0.9); //0
-        double z=(y/(maxHeight/2.0) - 0.9);//-0.5
-
-        gl.glPushMatrix();
-        gl.glTranslated( w, z, 0);
-        gl.glScaled(0.1*scale, 0.1*scale, 1);
-
-///////
-
-        gl.glBegin(GL.GL_QUADS);
-        // Front Face
-        gl.glTexCoord2f(0.0f, 0.0f);
-        gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 0.0f);
-        gl.glVertex3f(1.0f, -1.0f, -1.0f);
-        gl.glTexCoord2f(1.0f, 1.0f);
-        gl.glVertex3f(1.0f, 1.0f, -1.0f);
-        gl.glTexCoord2f(0.0f, 1.0f);
-        gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-        gl.glEnd();
-        gl.glPopMatrix();
-
-
-        gl.glDisable(GL.GL_BLEND);
-    }
     public void DrawSprite(GL gl,int x, int y, int index, float scale , AnimGLEventListener3.Directions dir){
         gl.glEnable(GL.GL_BLEND);
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[index]);	// Turn Blending On
@@ -1347,7 +1221,7 @@ boolean killed=true;
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
-       System.out.println(x+"X"+" " +y+" Y");
+        System.out.println(x+"X"+" " +y+" Y");
     }
 
     @Override
