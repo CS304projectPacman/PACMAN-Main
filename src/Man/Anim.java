@@ -7,60 +7,54 @@ package Man;
  */
 //package project;
 
-import com.sun.opengl.util.*;
-import org.w3c.dom.css.Counter;
 
+import com.sun.opengl.util.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.media.opengl.*;
 import javax.swing.*;
+import com.sun.opengl.util.FPSAnimator;
+public class Anim extends JFrame {
 
-public class Anim extends JFrame implements ActionListener {
-    int counter=0;
-pac p=new pac();
+
     public static void main(String[] args) {
 //        for (int i = 0; i < 10; i++) {
 //            System.out.println(i%4);
 //        }
-     //   JFrame jFrame=new JFrame();
         new Anim();
 
     }
 
 
-    public Anim()  {
+
+    pac q=new pac();
+
+
+
+    public Anim() {
         GLCanvas glcanvas;
         Animator animator;
-//        GLEventListener listener = new maze();
-   AnimListener listener = new pac();
-   // JLabel jLabel=new JLabel("Score");
-JLabel jLabel=new JLabel();
-       // JTextField jTextField=new JTextField("Score",p.counter);
-       // jButton.add();
+//        GLEventListener listener = new BouncingCardsGLEventListener();
+
+        
+        AnimListener listener = new pac();
+//        AnimListener listener =new ghost();
+        
 
 
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
-      glcanvas.addKeyListener(listener);
+        glcanvas.addKeyListener(listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
-     getContentPane().add(jLabel, BorderLayout.SOUTH);
-        //getContentPane().add(jTextField, BorderLayout.SOUTH);
         animator = new FPSAnimator(15);
         animator.add(glcanvas);
         animator.start();
 
-        setTitle("Anim Test");
+        setTitle("PAC-Man");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(420, 420);
         setLocationRelativeTo(null);
         setVisible(true);
         setFocusable(true);
         glcanvas.requestFocus();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }
