@@ -139,51 +139,46 @@ playSound("a.wav");
         handleKeyPress();
         gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
         drawghost(gl);
-        TextRenderer textRenderer = new TextRenderer(new Font("Small", Font.BOLD, 10), true, true);
-        textRenderer.beginRendering(maxWidth, maxWidth);
-        textRenderer.draw(String.valueOf(counter),3, 40);
-        textRenderer.endRendering();
         drawPoints(gl);
         DrawBackground(gl);
         if (creatEeat) {
             points(gl);
         }
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
-
         bounds();
-
         drowf(gl);
-        iseat();
-
+       // iseat(gl)
         drowf(gl);
-        iseat();
+        iseat(gl);
         kill(gl);
         isdead(gl);
-        DrawScore(gl, 5, 60, index, 2f);
-
-
     }
-
+    void counter(GL gl ,int size,float scale){
+        DrawScore(gl, 5, 60, index, scale);
+        TextRenderer textRenderer = new TextRenderer(new Font("Small", Font.BOLD,size), true, true);
+        textRenderer.beginRendering(maxWidth, maxWidth);
+        textRenderer.draw(String.valueOf(counter),3, 40);
+        textRenderer.endRendering();
+    }
     public void isdead(GL gl) {
 
 
         if (dead == 3) {
 
-
+            counter( gl,10,2);
             DrawLive(gl, 90, 58, index, 0.3f);
             DrawLive(gl, 85, 58, index, 0.3f);
             DrawLive(gl, 80, 58, index, 0.3f);
 
         }  if (dead == 2) {
-
-
+            counter( gl,10,2);
             DrawLive(gl, 90, 58, index, 0.3f);
             DrawLive(gl, 85, 58, index, 0.3f);
 
 //
         }  if (dead == 1) {
             DrawLive(gl, 85, 58, index, 0.3f);
-
+            counter( gl,10,2);
 
 
             //DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
@@ -194,14 +189,26 @@ playSound("a.wav");
             textRenderer.draw("GAME OVER ", 5, 50);
             textRenderer.endRendering();
 
+            TextRenderer text = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+            text.beginRendering(maxWidth, maxWidth);
+            text.draw("your Score is ", 15, 30);
+            text.endRendering();
+
+            TextRenderer count = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+            count.beginRendering(maxWidth, maxWidth);
+            count.draw(String.valueOf(counter), 48, 20);
+            count.endRendering();
+
+            foodmap.remove(new Pair(m,n ));
                 clip.stop();
             x=500;
             y=500;
+            counter( gl,0,0);
         }
 
     }
 
-        public void drawghost(GL gl){
+    public void drawghost(GL gl){
 //            if(stopp==true) {
 //                animate.stop();
 //            }
@@ -245,7 +252,7 @@ playSound("a.wav");
             else
                 down = true;
 
-            DrawGhost(gl,m2,n2,index2,0.5f);
+            DrawGhost(gl,m2,n2,index2,0.6f);
             if (left){
                 if(m2>=0) {
                     m2--;
@@ -261,7 +268,7 @@ playSound("a.wav");
             else
                 left = true;
 
-            DrawGhost(gl,m3,n3,index3,0.5f);
+            DrawGhost(gl,m3,n3,index3,0.6f);
             if (right){
                 if(m3>=0) {
                     m3--;
@@ -275,7 +282,7 @@ playSound("a.wav");
             }
             else
                 right = true;
-            DrawGhost(gl,m4,n4,index4,0.5f);
+            DrawGhost(gl,m4,n4,index4,0.6f);
             if (left){
                 if(m4>=0) {
                     m4--;
@@ -289,7 +296,7 @@ playSound("a.wav");
             }
             else
                 left = true;
-            DrawGhost(gl,m5,n5,index5,0.5f);
+            DrawGhost(gl,m5,n5,index5,0.6f);
             if (right){
                 if(m5>=0){
                     m5--;
@@ -415,7 +422,7 @@ playSound("a.wav");
     }
 
 
-    public void iseat() {
+    public void iseat(GL gl) {
         for (int i = -2; i < 2; i++) {
             for (int j = -2; j < 2; j++) {
 
@@ -434,8 +441,19 @@ playSound("a.wav");
             textRenderer.beginRendering(maxWidth, maxWidth);
             textRenderer.draw("YOU WIN ", 15, 50);
             textRenderer.endRendering();
+
+            TextRenderer text = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+            text.beginRendering(maxWidth, maxWidth);
+            text.draw("your Score is ", 15, 40);
+            text.endRendering();
+
+            TextRenderer count = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+            count.beginRendering(maxWidth, maxWidth);
+            count.draw(String.valueOf(counter), 48, 30);
+            count.endRendering();
             x=500;
             y=500;
+            counter( gl,0,0);
         }
     }
     public void drowf(GL gl) {
@@ -452,35 +470,36 @@ playSound("a.wav");
         }
     }
     boolean killed=true;
+    //x +i== m && y  +i== n
     public void kill(GL gl) {
         for (int i = -7; i < 7; i++) {
-            if (x  +i== m && y  +i== n) {
+            if (x>=m-5&&x<=m+5&&y>=n-5&&y<=n+5) {
                 dead--;
                 System.out.println(dead);
                 x=50;
                 y=50;
 
-            } else if (x + i == m1 && y + i == n1) {
+            } else if (x>=m1-5&&x<=m1+5&&y>=n1-5&&y<=n1+5) {
                 dead--;
                 x=50;
                 y=50;
                 System.out.println(dead);
-            } else if (x + i == m2 && y + i == n2) {
+            } else if (x>=m2-5&&x<=m2+5&&y>=n2-5&&y<=n2+5) {
                 dead--;
                 x=50;
                 y=50;
                 System.out.println(dead);
-            } else if (x + i == m3 && y + i == n3) {
+            } else if (x>=m3-5&&x<=m3+5&&y>=n3-5&&y<=n3+5) {
                 dead--;
                 x=50;
                 y=50;
                 System.out.println(dead);
-            } else if (x + i == m4 && y + i == n4) {
+            } else if (x>=m4-5&&x<=m4+5&&y>=n4-5&&y<=n4+5) {
                 dead--;
                 System.out.println(dead);
                 x=50;
                 y=50;
-            } else if (x + i == m5 && y + i == n5) {
+            } else if (x>=m5-5&&x<=m5+5&&y>=n5-5&&y<=n5+5) {
                 dead--;
                 System.out.println(dead);
                 x=50;
