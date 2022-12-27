@@ -8,32 +8,44 @@ package Man;
 //package project;
 
 import com.sun.opengl.util.*;
+import org.w3c.dom.css.Counter;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.media.opengl.*;
 import javax.swing.*;
 
-public class Anim extends JFrame {
-
+public class Anim extends JFrame implements ActionListener {
+    int counter=0;
+pac p=new pac();
     public static void main(String[] args) {
 //        for (int i = 0; i < 10; i++) {
 //            System.out.println(i%4);
 //        }
+     //   JFrame jFrame=new JFrame();
         new Anim();
 
     }
 
 
-    public Anim() {
+    public Anim()  {
         GLCanvas glcanvas;
         Animator animator;
-        GLEventListener listener = new maze();
-//        AnimListener listener = new pac();
+//        GLEventListener listener = new maze();
+   AnimListener listener = new pac();
+   // JLabel jLabel=new JLabel("Score");
+JLabel jLabel=new JLabel();
+       // JTextField jTextField=new JTextField("Score",p.counter);
+       // jButton.add();
 
 
         glcanvas = new GLCanvas();
         glcanvas.addGLEventListener(listener);
-//        glcanvas.addKeyListener(listener);
+      glcanvas.addKeyListener(listener);
         getContentPane().add(glcanvas, BorderLayout.CENTER);
+     getContentPane().add(jLabel, BorderLayout.SOUTH);
+        //getContentPane().add(jTextField, BorderLayout.SOUTH);
         animator = new FPSAnimator(15);
         animator.add(glcanvas);
         animator.start();
@@ -45,5 +57,10 @@ public class Anim extends JFrame {
         setVisible(true);
         setFocusable(true);
         glcanvas.requestFocus();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
