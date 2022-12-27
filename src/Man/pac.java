@@ -8,23 +8,28 @@ package Man;
 //package project;
 
 import Texture.TextureReader;
-import com.sun.opengl.util.FPSAnimator;
+import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.j2d.TextRenderer;
 
-import java.io.File;
-import java.io.IOException;
-import javax.media.opengl.*;
-import java.awt.Font;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.Timer;
-import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Iterator;
 
 public class pac extends AnimListener implements GLEventListener, KeyListener{
+
 
     boolean balls [][];
     boolean states [][];
@@ -44,18 +49,20 @@ public class pac extends AnimListener implements GLEventListener, KeyListener{
     int dead=3;
     int index = 4;
     int index1 = 8;
+    int timer2 =200;
     int index2 = 12;
     int index3 = 16;
     int index4 = 4;
     int index5 = 12;
     int maxWidth = 100;
     int maxHeight = 100;
-    int m = 18, n = 90;
+    int m = 72, n = 10;
     int m1 = 72, n1 = 90;
     int m2 = 89, n2 = 78;
     int m3 = 1, n3 = 78;
     int m4 = 89, n4 = 0;
     int m5 = 1, n5 = 0;
+
 
     int x = maxWidth / 2, y = maxHeight / 2; // 45 ,20
     boolean down;
@@ -94,6 +101,7 @@ public class pac extends AnimListener implements GLEventListener, KeyListener{
 
 
     public void init(GLAutoDrawable gld) {
+        timer2--;
 
         GL gl = gld.getGL();
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);    //This Will Clear The Background Color To Black
@@ -129,29 +137,70 @@ playSound("a.wav");
         }
 
     }
+long Timer=3600;
 
 
     public void display(GLAutoDrawable gld) {
+        if (timer2>0)
+        timer2--;
+        GLUT g=new GLUT();
         GL gl = gld.getGL();
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         gl.glLoadIdentity();
         gl.glBindTexture(GL.GL_TEXTURE_2D, textures[texture.length-2]);
         handleKeyPress();
         gl.glDisableClientState(GL.GL_TEXTURE_COORD_ARRAY);
+        bounds();
+//        System.out.println(timer2);
+
+            if(stopp==false){
+//    if (animate.isAnimating()) {
+//        animate.stop();
+//        drawghost(gl);
+//    }
+
+
+
         drawghost(gl);
+        if(counter>=20 && counter<100){
+            drawghost(gl);
+            drawghost(gl);
+        }
+                if(counter>=100 && counter<151){
+                    drawghost(gl);
+                    drawghost(gl);
+                    drawghost(gl);
+
+                }
         drawPoints(gl);
+
         DrawBackground(gl);
         if (creatEeat) {
-            points(gl);
+            points();
         }
         DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
-        bounds();
+gl.glRasterPos2d(50,50);
+g.glutBitmapString(2,Integer.toString((int)(Timer--)/60));
+
+
+
+//                Timer(gl,20,10);
         drowf(gl);
        // iseat(gl)
         drowf(gl);
         iseat(gl);
         kill(gl);
         isdead(gl);
+    }}
+
+
+
+    void Timer(GL gl ,int size,float scale){
+        DrawScore(gl, 5, 60, index, scale);
+        TextRenderer textRenderer = new TextRenderer(new Font("Small", Font.BOLD,size), true, true);
+        textRenderer.beginRendering(maxWidth, maxWidth);
+        textRenderer.draw(String.valueOf(Timer),3, 40);
+        textRenderer.endRendering();
     }
     void counter(GL gl ,int size,float scale){
         DrawScore(gl, 5, 60, index, scale);
@@ -159,6 +208,14 @@ playSound("a.wav");
         textRenderer.beginRendering(maxWidth, maxWidth);
         textRenderer.draw(String.valueOf(counter),3, 40);
         textRenderer.endRendering();
+
+
+    }
+    void print(GL gl ,int size,float scale){
+        TextRenderer textRenderer1 = new TextRenderer(new Font("Small", Font.BOLD,size), true, true);
+        textRenderer1.beginRendering(maxWidth, maxWidth);
+        textRenderer1.draw(" R to restart ", 5, 10);
+        textRenderer1.endRendering();
     }
     public void isdead(GL gl) {
 
@@ -183,7 +240,7 @@ playSound("a.wav");
 
             //DrawSprite(gl, x, y, animationIndex, 0.6f,direction);
         } else if (dead <= 0) {
-            playSound("pacman_death.wav");
+//            playSound("pacman_death.wav");
             TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 15), true, true);
             textRenderer.beginRendering(maxWidth, maxWidth);
             textRenderer.draw("GAME OVER ", 5, 50);
@@ -193,6 +250,10 @@ playSound("a.wav");
             text.beginRendering(maxWidth, maxWidth);
             text.draw("your Score is ", 15, 30);
             text.endRendering();
+            playSound("pacman_death.wav");
+                       print(gl,10,2 );
+                       timer2=0;
+
 
             TextRenderer count = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
             count.beginRendering(maxWidth, maxWidth);
@@ -200,10 +261,33 @@ playSound("a.wav");
             count.endRendering();
 
             foodmap.remove(new Pair(m,n ));
-                clip.stop();
+//                clip.stop();
             x=500;
             y=500;
             counter( gl,0,0);
+        }
+        TextRenderer count = new TextRenderer(new Font("Sherif", Font.BOLD, 10), true, true);
+        count.beginRendering(maxWidth, maxWidth);
+        count.draw(String.valueOf(timer2), 83, 40);
+        count.endRendering();
+        if (timer2<=0){
+
+            x=500;
+            y=500;
+            counter( gl,0,0);
+            playSound("pacman_death.wav");
+            TextRenderer textRenderer = new TextRenderer(new Font("Sherif", Font.BOLD, 15), true, true);
+            textRenderer.beginRendering(maxWidth, maxWidth);
+            textRenderer.draw("GAME OVER ", 5, 50);
+            textRenderer.endRendering();
+            print(gl ,10,2);
+            counter(gl ,10,2);
+
+
+
+
+
+
         }
 
     }
@@ -237,20 +321,20 @@ playSound("a.wav");
             }else
                 down = true;
             DrawGhost(gl,m1,n1,index1,0.6f);
-            if (down){
+            if (up){
                 if(n1 > 10){
                     n1--;
                     index1 = 9;
                 }
                 else
-                    down = false;
+                    up = false;
             }
             else if (n1<=90) {
                 n1++;
                 index1 = 8 ;
             }
             else
-                down = true;
+                up = true;
 
             DrawGhost(gl,m2,n2,index2,0.6f);
             if (left){
@@ -317,7 +401,7 @@ playSound("a.wav");
 
 
 
-    public void points(GL gl){
+    public void points(){
         creatEeat=false;
 
         loops();
@@ -422,6 +506,9 @@ playSound("a.wav");
     }
 
 
+
+
+
     public void iseat(GL gl) {
         for (int i = -2; i < 2; i++) {
             for (int j = -2; j < 2; j++) {
@@ -430,6 +517,7 @@ playSound("a.wav");
                     foodmap.remove(new Pair(x + i, y + j));
                     playSound("pacman_chomp.wav");
                     counter++;
+                    timer2=200;
                     break;
                 }
 
@@ -475,7 +563,7 @@ playSound("a.wav");
         for (int i = -7; i < 7; i++) {
             if (x>=m-5&&x<=m+5&&y>=n-5&&y<=n+5) {
                 dead--;
-                System.out.println(dead);
+//                System.out.println(dead);
                 x=50;
                 y=50;
 
@@ -483,25 +571,25 @@ playSound("a.wav");
                 dead--;
                 x=50;
                 y=50;
-                System.out.println(dead);
+//                System.out.println(dead);
             } else if (x>=m2-5&&x<=m2+5&&y>=n2-5&&y<=n2+5) {
                 dead--;
                 x=50;
                 y=50;
-                System.out.println(dead);
+//                System.out.println(dead);
             } else if (x>=m3-5&&x<=m3+5&&y>=n3-5&&y<=n3+5) {
                 dead--;
                 x=50;
                 y=50;
-                System.out.println(dead);
+//                System.out.println(dead);
             } else if (x>=m4-5&&x<=m4+5&&y>=n4-5&&y<=n4+5) {
                 dead--;
-                System.out.println(dead);
+//                System.out.println(dead);
                 x=50;
                 y=50;
             } else if (x>=m5-5&&x<=m5+5&&y>=n5-5&&y<=n5+5) {
                 dead--;
-                System.out.println(dead);
+//                System.out.println(dead);
                 x=50;
                 y=50;
             }
@@ -720,14 +808,18 @@ playSound("a.wav");
      */
     boolean stopp =false;
 
-//public void stop(GL gl){
-//    if(stopp==true){
-//    if (animate.isAnimating()) {
-//        animate.stop();
-//        drawghost(gl);
-//    }
-//}
-//}
+    boolean restart=false;
+    public void restart(){
+        if(restart==true){
+            x=50;
+            y=50;
+            dead=3;
+            counter=0;
+            timer2=200;
+
+        }
+
+    }
 
 
 
@@ -741,6 +833,7 @@ playSound("a.wav");
 //            y=19;
 //        }
 /*
+
         1 = Rigth , 2=Down  , 3 =left , 0= up
          */
 //        if (isKeyPressed(KeyEvent.VK_LEFT)&&isKeyPressed(KeyEvent.VK_DOWN)) {
@@ -792,10 +885,40 @@ playSound("a.wav");
 //
 //        }
 
-        if (isKeyPressed(KeyEvent.VK_ESCAPE)) {
-           System.out.println("*************************");
-           stopp=true;
+//        if (isKeyPressed(KeyEvent.VK_ESCAPE)) {
+//           System.out.println("*************************");
+//           stopp=true;
+//           clip.stop();
+//           timer2++;
+//
+//        }
 
+        if (isKeyPressed(KeyEvent.VK_R)) {
+
+            restart=true;
+            points();
+            restart();
+        }
+        if (isKeyPressed(KeyEvent.VK_ESCAPE)) {
+//            System.out.println("*************************");
+
+            stopp=true;
+
+            x=50;
+            y=50;
+            timer2++;
+            clip.stop();
+
+
+        }
+        else if (isKeyPressed(KeyEvent.VK_ALT)) {
+//            System.out.println("*************************");
+            stopp=false;
+
+            x=50;
+            y=50;
+timer2++;
+            clip.start();
         }
          if (isKeyPressed(KeyEvent.VK_LEFT)) {
             if (x > -10) {
@@ -1396,7 +1519,15 @@ playSound("a.wav");
     public void keyPressed(final KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyBits.set(keyCode);
-        System.out.println(x+"X"+" " +y+" Y");
+//        System.out.println(x+"X"+" " +y+" Y");
+//        if (isKeyPressed(KeyEvent.VK_ESCAPE)) {
+//            System.out.println("*************************");
+//            stopp=true;
+//            clip.stop();
+//            timer2++;
+//
+//        }
+
     }
 
     @Override

@@ -51,7 +51,7 @@ public class Anim extends JFrame {
 
         setTitle("PAC-Man");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(420, 420);
+        setSize(700, 700);
         setLocationRelativeTo(null);
         setVisible(true);
         setFocusable(true);
