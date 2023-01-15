@@ -1,8 +1,8 @@
 # PACMAN-Main
 
-#CS304 Project
+# CS304 Project
 
 # Team Work :
-#Ahmed Hussieny
-#Mohamed ahmed
-#Hazem Amr
+# Ahmed Hussieny
+# Mohamed ahmed
+# Hazem Amr
